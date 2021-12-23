@@ -19,7 +19,7 @@ public class JwtUtil {
     private final String SECRET_KEY = "dupa";
     private final UserRepository userRepository;
 
-    public String extractUsername(String token) {
+    public String extractId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -53,7 +53,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final var username = extractUsername(token);
+        final var username = userRepository.findById(extractId(token)).get().getUsername();
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

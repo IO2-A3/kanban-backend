@@ -1,14 +1,10 @@
 package com.example.kanbanbackend.user;
 
-import com.example.kanbanbackend.security.JwtUtil;
-import com.example.kanbanbackend.security.MyUserDetailsService;
-import com.example.kanbanbackend.user.models.*;
+import com.example.kanbanbackend.user.models.UserListDto;
+import com.example.kanbanbackend.user.models.UserServiceCommand;
+import com.example.kanbanbackend.user.models.UserWebInput;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
