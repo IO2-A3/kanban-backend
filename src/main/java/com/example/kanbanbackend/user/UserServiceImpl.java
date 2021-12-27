@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.user;
 
+import com.example.kanbanbackend.UI.idGenerator.IdGenerator;
 import com.example.kanbanbackend.user.models.User;
 import com.example.kanbanbackend.user.models.UserListDto;
 import com.example.kanbanbackend.user.models.UserServiceCommand;

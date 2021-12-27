@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.security;
+package com.example.kanbanbackend.authentication;
 
 import com.example.kanbanbackend.user.UserRepository;
 import io.jsonwebtoken.Claims;

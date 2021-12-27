@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.security;
+package com.example.kanbanbackend.authentication;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.user.UserRepository;
@@ -33,7 +33,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            id = jwtUtil.extractId(jwt);
+            try {
+                id = jwtUtil.extractId(jwt);
+            } catch (Exception e) {
+                System.out.println("Something gone wrong");
+            }
         }
 
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {

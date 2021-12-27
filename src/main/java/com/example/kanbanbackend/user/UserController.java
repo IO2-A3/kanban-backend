@@ -12,17 +12,9 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason = "User created successfully")
-    public String registerAnUser(@Valid @RequestBody UserWebInput webInput) {
-        userService.addUser(UserServiceCommand.builder().webInput(webInput).build());
-
-        return "Elo";
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

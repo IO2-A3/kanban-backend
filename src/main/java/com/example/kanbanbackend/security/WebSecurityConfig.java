@@ -1,5 +1,7 @@
 package com.example.kanbanbackend.security;
 
+import com.example.kanbanbackend.UI.MyUserDetailsService;
+import com.example.kanbanbackend.authentication.JwtRequestFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-    private JwtRequestFilter requestFilter;
-    private MyUserDetailsService myUserDetailsService;
+    private final JwtRequestFilter requestFilter;
+    private final MyUserDetailsService myUserDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

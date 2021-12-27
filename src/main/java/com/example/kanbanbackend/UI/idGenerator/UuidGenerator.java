@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.user;
+package com.example.kanbanbackend.UI.idGenerator;
 
 import org.springframework.stereotype.Component;
 
