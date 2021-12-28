@@ -1,6 +1,5 @@
 package com.example.kanbanbackend.user;
 
-import com.example.kanbanbackend.user.models.User;
 import com.example.kanbanbackend.user.models.UserListDto;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
 
@@ -12,4 +11,6 @@ public interface UserService {
     List<UserListDto> getUsers();
 
     void deleteAnUser(String id);
+
+    String getUserName(String id);
 }

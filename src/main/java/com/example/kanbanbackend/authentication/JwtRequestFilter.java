@@ -36,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 id = jwtUtil.extractId(jwt);
             } catch (Exception e) {
-                System.out.println("Something gone wrong");
+                System.out.println("Something gone wrong while extracting id!");
             }
         }
 

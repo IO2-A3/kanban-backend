@@ -1,6 +1,7 @@
 package com.example.kanbanbackend.user;
 
 import com.example.kanbanbackend.UI.idGenerator.IdGenerator;
+import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.user.models.User;
 import com.example.kanbanbackend.user.models.UserListDto;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
@@ -54,5 +55,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteAnUser(String id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public String getUserName(String id) {
+        var user = userRepository.findById(id).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
+        return user.getUsername();
     }
 }

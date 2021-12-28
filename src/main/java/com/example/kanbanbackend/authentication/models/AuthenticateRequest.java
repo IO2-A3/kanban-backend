@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.user.models;
+package com.example.kanbanbackend.authentication.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
