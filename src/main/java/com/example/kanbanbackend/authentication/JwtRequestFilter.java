@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.authentication;
 
+import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 id = jwtUtil.extractId(jwt);
             } catch (Exception e) {
-                System.out.println("Something gone wrong while extracting id!");
+                throw new ExpiredTokenException("Token is probably expired!");
             }
         }
 
