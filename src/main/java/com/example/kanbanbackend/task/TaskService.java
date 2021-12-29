@@ -29,7 +29,7 @@ public class TaskService {
                 .id(UUID.randomUUID())
                 .name(taskInputDTO.getName())
                 .description(taskInputDTO.getDescription())
-                .listId(taskInputDTO.getListId())
+                .list(listRepository.findById(taskInputDTO.getListId()).get())
                 .dueDate(taskInputDTO.getDueDate())
                 .listOrder((int) ++quantity).build(); //todo: order tak samo jak w listach.dueDate(taskInputDTO.getDueDate()).build();
         taskRepository.save(task);

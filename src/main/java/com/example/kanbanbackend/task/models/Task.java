@@ -1,5 +1,7 @@
 package com.example.kanbanbackend.task.models;
 
+import com.example.kanbanbackend.list.models.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +11,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -21,7 +24,11 @@ public class Task {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Id
     private UUID id;
-    private UUID listId;
+
+    @JsonBackReference
+    @ManyToOne
+    private List list;
+
     private String name;
     private String description; //todo: string -> text
     private Integer listOrder;
