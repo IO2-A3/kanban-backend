@@ -2,11 +2,10 @@ package com.example.kanbanbackend.user;
 
 import com.example.kanbanbackend.UI.idGenerator.IdGenerator;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
-import com.example.kanbanbackend.user.models.User;
-import com.example.kanbanbackend.user.models.UserListDto;
-import com.example.kanbanbackend.user.models.UserServiceCommand;
+import com.example.kanbanbackend.user.models.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +58,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getUserName(String id) {
-        var user = userRepository.findById(id).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
+        var user = getUser(id);
         return user.getUsername();
+    }
+
+    @Override
+    public UserIdDto getUserById(String id) {
+        var user = getUser(id);
+        return mapper.map(user, UserIdDto.class);
+    }
+
+    @Override
+    public void updateAnUser(String id, UserUpdateWebInput input) {
+        var user = getUser(id);
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        mapper.map(input, user);
+
+        userRepository.save(user);
+    }
+
+    private User getUser(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
     }
 }

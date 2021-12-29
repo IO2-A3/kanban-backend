@@ -1,13 +1,12 @@
 package com.example.kanbanbackend.user;
 
+import com.example.kanbanbackend.user.models.UserIdDto;
 import com.example.kanbanbackend.user.models.UserListDto;
-import com.example.kanbanbackend.user.models.UserServiceCommand;
-import com.example.kanbanbackend.user.models.UserWebInput;
+import com.example.kanbanbackend.user.models.UserUpdateWebInput;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,8 +21,21 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @DeleteMapping("{id}")
+    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
+    public UserIdDto getUserById(@PathVariable String id) {
+        return userService.getUserById(id);
+    }
+
+    @PutMapping("{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Resource updated succesfully")
+    public void updateAnUser(@RequestBody UserUpdateWebInput input,
+                            @PathVariable String id) {
+        userService.updateAnUser(id, input);
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Resource deleted succesfully")
     public void deleteAnUser(@PathVariable("id") String id) {
         userService.deleteAnUser(id);
     }
