@@ -1,5 +1,6 @@
-package com.example.kanbanbackend.security;
+package com.example.kanbanbackend.authentication;
 
+import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            id = jwtUtil.extractId(jwt);
+            try {
+                id = jwtUtil.extractId(jwt);
+            } catch (Exception e) {
+                throw new ExpiredTokenException("Token is probably expired!");
+            }
         }
 
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {

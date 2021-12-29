@@ -6,5 +6,5 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserServiceCommand {
-    private UserWebInput webInput;
+    private final UserWebInput webInput;
 }

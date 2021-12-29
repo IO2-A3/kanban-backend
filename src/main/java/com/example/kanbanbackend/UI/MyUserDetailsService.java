@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.security;
+package com.example.kanbanbackend.UI;
 
 import com.example.kanbanbackend.exceptions.IncorrectInputDataException;
 import com.example.kanbanbackend.user.UserRepository;
