@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity(name = "UserData")
 public class User {
+
     @Id
     private String id;
     private String firstName;
