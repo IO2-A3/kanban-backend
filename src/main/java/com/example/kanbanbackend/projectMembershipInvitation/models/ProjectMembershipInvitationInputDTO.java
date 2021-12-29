@@ -1,6 +1,7 @@
-package com.example.kanbanbackend.projectMembershipInvitation;
+package com.example.kanbanbackend.projectMembershipInvitation.models;
 
 import lombok.Getter;
+import org.hibernate.annotations.Type;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;

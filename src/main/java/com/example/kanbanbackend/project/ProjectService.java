@@ -20,14 +20,15 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ModelMapper mapper;
 
-    public void createProject(ProjectInputDTO projectInputDTO){
+    public UUID createProject(ProjectInputDTO projectInputDTO){
         var project = Project.builder()
-                .id(UUID.randomUUID().toString())
+                .id(UUID.randomUUID())
                 .name(projectInputDTO.getName())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         projectRepository.save(project);
+        return project.getId();
     }
 
     public Set<ProjectSetDto> findProjects(){
@@ -37,12 +38,12 @@ public class ProjectService {
                 .collect(Collectors.toSet());
     }
 
-    public ProjectIdDto findProject(String projectId){
+    public ProjectIdDto findProject(UUID projectId){
         var project = projectRepository.findById(projectId).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
         return mapper.map(project, ProjectIdDto.class);
     }
 
-    public void removeProject(String projectID){
+    public void removeProject(UUID projectID){
         projectRepository.findById(projectID);
     }
 }

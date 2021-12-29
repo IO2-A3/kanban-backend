@@ -1,34 +1,37 @@
 package com.example.kanbanbackend.projectMembershipInvitation;
 
+import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
+import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/projectMembershipInvitation")
 public class ProjectMembershipInvitationController {
     private ProjectMembershipInvitationService service;
 
-    @GetMapping("/projectMembershipInvitations")
+    @GetMapping()
     public Set<ProjectMembershipInvitation> getInvitations(){
         return service.findInvitations();
     }
 
-    @GetMapping("/projectMembershipInvitation/{id}")
+    @GetMapping("/{id}")
     public Optional<ProjectMembershipInvitation> getInvitation(@PathVariable UUID id){
         return service.findInvitation(id);
     }
 
-    @PostMapping("/projectMembershipInvitation")
-    public UUID addInvitation(@RequestBody ProjectMembershipInvitationInputDTO dto){
+    @PostMapping()
+    public UUID addInvitation(@Valid @RequestBody ProjectMembershipInvitationInputDTO dto){
         return service.createInvitation(dto);
     }
 
-    @DeleteMapping("/projectMembershipInvitation/{id}")
+    @DeleteMapping("/{id}")
     public void deleteInvitation(@PathVariable UUID id){
         service.removeInvitation(id);
     }
