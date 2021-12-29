@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,13 +23,15 @@ public class TaskService {
 
     public void createTask(TaskInputDto taskInputDTO){
         listRepository.findById(taskInputDTO.getListId()).orElseThrow(() -> new IllegalArgumentException("List with this id don't exist"));
+        var quantity = taskRepository.count();
 
         var task = Task.builder()
                 .id(UUID.randomUUID().toString())
                 .name(taskInputDTO.getName())
                 .description(taskInputDTO.getDescription())
                 .listId(taskInputDTO.getListId())
-                .listOrder(1).build(); //todo: order tak samo jak w listach.dueDate(taskInputDTO.getDueDate()).build();
+                .dueDate(taskInputDTO.getDueDate())
+                .listOrder((int) ++quantity).build(); //todo: order tak samo jak w listach.dueDate(taskInputDTO.getDueDate()).build();
         taskRepository.save(task);
     }
 

@@ -1,4 +1,4 @@
-package com.example.kanbanbackend.list.models;
+package com.example.kanbanbackend.project.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 
 @Entity
-@NoArgsConstructor
 @Builder
-@AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 @Getter
-public class List {
+public class Project {
     @Id
     private String id;
-    private String projectId;
+    private Timestamp createdAt;
     private String name;
-    private Integer listOrder; // order to keyword w sqlu
 }

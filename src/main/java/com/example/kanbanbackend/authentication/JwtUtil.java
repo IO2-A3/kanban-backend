@@ -57,10 +57,10 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final var username = userRepository.findById(extractId(token)).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")).getUsername();
-        if (!isTokenExpired(token)) {
+        if (isTokenExpired(token)) {
             throw new ExpiredTokenException("Token has expired");
-        } else if (username.equals(userDetails.getUsername())) {
-            throw new IncorrectInputDataException("Something gone wrong!");
+        } else if (!username.equals(userDetails.getUsername())) {
+            throw new IncorrectInputDataException("Wrong username! expected: " + username + " acquired " + userDetails.getUsername());
         }
         return true;
     }
