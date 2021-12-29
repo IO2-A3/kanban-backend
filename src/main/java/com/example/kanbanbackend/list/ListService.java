@@ -21,18 +21,19 @@ public class ListService {
     private final ProjectRepository projectRepository;
     private final ModelMapper mapper;
 
-    public void createList(ListInputDto listInputDTO){
+    public UUID createList(ListInputDto listInputDTO){
         projectRepository.findById(listInputDTO.getProjectId()).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
         var quantity = listRepository.count();
 
         var list = List.builder()
-                .id(UUID.randomUUID().toString())
+                .id(UUID.randomUUID())
                 .name(listInputDTO.getName())
                 .projectId(listInputDTO.getProjectId())
                 .listOrder((int) ++quantity)//todo: zrobic order, zliczac ile jest list w projekcie i dodawac na koncu z order ostatniej +1
                 .build();
 
         listRepository.save(list);
+        return list.getId();
     }
 
     public Set<ListSetDto> findLists(){
@@ -43,12 +44,12 @@ public class ListService {
                 .collect(Collectors.toSet());
     }
 
-    public ListIdDto findListById(String listId){
+    public ListIdDto findListById(UUID listId){
         var list = listRepository.findById(listId).orElseThrow(() -> new IncorrectIdInputException("Wrond id!"));
         return mapper.map(list, ListIdDto.class);
     }
 
-    public void removeList(String listId){
+    public void removeList(UUID listId){
         listRepository.deleteById(listId);
     }
 }

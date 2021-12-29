@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.list;
 
+import com.example.kanbanbackend.list.models.List;
 import com.example.kanbanbackend.list.models.ListIdDto;
 import com.example.kanbanbackend.list.models.ListInputDto;
 import com.example.kanbanbackend.list.models.ListSetDto;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/list")
@@ -21,17 +24,18 @@ public class ListController {
     }
 
     @GetMapping("{id}")
-    public ListIdDto getListById(@PathVariable String id){
+    public ListIdDto getListById(@PathVariable UUID id){
         return listService.findListById(id);
     }
 
     @PostMapping
-    public void addList(@Valid @RequestBody ListInputDto listInputDTO){
-        listService.createList(listInputDTO);
+    public UUID addList(@Valid @RequestBody ListInputDto listInputDTO){
+        return listService.createList(listInputDTO);
     }
 
     @DeleteMapping("{id}")
-    public void deleteList(String id){
+    public void deleteList(UUID id){
         listService.removeList(id);
     }
 }
+

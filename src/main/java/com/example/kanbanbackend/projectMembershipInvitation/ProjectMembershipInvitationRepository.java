@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.projectMembershipInvitation;
 
+import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

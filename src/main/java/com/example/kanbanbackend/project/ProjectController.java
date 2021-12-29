@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -21,17 +22,17 @@ public class ProjectController {
     }
 
     @GetMapping("{id}")
-    public ProjectIdDto getProject(@PathVariable String id){
+    public ProjectIdDto getProject(@PathVariable UUID id){
         return projectService.findProject(id);
     }
 
     @PostMapping
-    public void addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
-        projectService.createProject(projectInputDTO);
+    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
+        return projectService.createProject(projectInputDTO);
     }
 
     @DeleteMapping("{id}")
-    public void deleteProject(@PathVariable String id){
+    public void deleteProject(@PathVariable UUID id){
         projectService.removeProject(id);
     }
 }

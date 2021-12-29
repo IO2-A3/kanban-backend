@@ -1,5 +1,7 @@
 package com.example.kanbanbackend.projectMembershipInvitation;
 
+import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
+import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
