@@ -27,8 +27,8 @@ public class ProjectController {
     }
 
     @PostMapping
-    public void addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
-        projectService.createProject(projectInputDTO);
+    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
+        return projectService.createProject(projectInputDTO);
     }
 
     @DeleteMapping("{id}")

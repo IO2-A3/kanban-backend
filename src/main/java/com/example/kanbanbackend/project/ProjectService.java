@@ -22,7 +22,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ModelMapper mapper;
 
-    public void createProject(ProjectInputDTO projectInputDTO){
+    public UUID createProject(ProjectInputDTO projectInputDTO){
         var project = Project.builder()
                 .id(UUID.randomUUID())
                 .name(projectInputDTO.getName())
@@ -30,6 +30,7 @@ public class ProjectService {
                 .build();
 
         projectRepository.save(project);
+        return project.getId();
     }
 
     public Set<ProjectSetDto> findProjects(){
@@ -54,7 +55,7 @@ public class ProjectService {
         return result;
     }
 
-    public void removeProject(UUID projectId){
-        projectRepository.findById(projectId);
+    public void removeProject(UUID projectID){
+        projectRepository.findById(projectID);
     }
 }

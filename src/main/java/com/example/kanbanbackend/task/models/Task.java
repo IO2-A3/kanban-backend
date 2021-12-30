@@ -1,14 +1,19 @@
 package com.example.kanbanbackend.task.models;
 
+import com.example.kanbanbackend.list.models.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Builder
@@ -16,15 +21,16 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Getter
 public class Task {
+    @Type(type="org.hibernate.type.UUIDCharType")
     @Id
-    private String id;
-    private String listId;
+    private UUID id;
+
+    @JsonBackReference
+    @ManyToOne
+    private List list;
+
     private String name;
     private String description; //todo: string -> text
     private Integer listOrder;
-    @JsonFormat(
-            shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            timezone = "Europe/Berlin")
     private Timestamp dueDate;
 }

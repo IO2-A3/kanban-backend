@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -21,17 +22,17 @@ public class TaskController {
     }
 
     @GetMapping("{id}")
-    public TaskIdDto getTask(@PathVariable String id){
+    public TaskIdDto getTask(@PathVariable UUID id){
         return taskService.findTask(id);
     }
 
     @PostMapping
-    public void addTask(@Valid @RequestBody TaskInputDto taskInputDTO){
-        taskService.createTask(taskInputDTO);
+    public UUID addTask(@Valid @RequestBody TaskInputDto taskInputDTO){
+        return taskService.createTask(taskInputDTO);
     }
 
     @DeleteMapping("{id}")
-    public void deleteTask(@PathVariable String id){
+    public void deleteTask(@PathVariable UUID id){
         taskService.removeTask(id);
     }
 }

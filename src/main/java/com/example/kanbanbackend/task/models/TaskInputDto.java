@@ -6,13 +6,14 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Getter
 public class TaskInputDto {
     @NotBlank
     private String name;
     @NotNull
-    private String listId;
+    private UUID listId;
     @NotBlank
     private String description;
     @JsonFormat(

@@ -20,6 +20,7 @@ import java.util.UUID;
 @Setter
 @Entity(name = "UserData")
 public class User {
+
     @Id
     private UUID id;
     private String firstName;
