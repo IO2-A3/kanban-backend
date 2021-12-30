@@ -6,17 +6,18 @@ import com.example.kanbanbackend.user.models.UserServiceCommand;
 import com.example.kanbanbackend.user.models.UserUpdateWebInput;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
     void addUser(UserServiceCommand command);
 
     List<UserListDto> getUsers();
 
-    void deleteAnUser(String id);
+    void deleteAnUser(UUID id);
 
-    String getUserName(String id);
+    String getUserName(UUID id);
 
-    UserIdDto getUserById(String id);
+    UserIdDto getUserById(UUID id);
 
-    void updateAnUser(String id, UserUpdateWebInput input);
+    void updateAnUser(UUID id, UserUpdateWebInput input);
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +17,7 @@ import javax.persistence.Id;
 public class List {
     @Id
     private String id;
-    private String projectId;
+    private UUID projectId;
     private String name;
     private Integer listOrder; // order to keyword w sqlu
 }

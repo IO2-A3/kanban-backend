@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 @Builder
@@ -14,10 +14,9 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Getter
 public class ProjectMember {
-    @Id
-    private String id;
-    private String userId;
-    private String projectId;
+    @EmbeddedId
+    ProjectMemberKey id;
+
     private ProjectRole role;
 
     public void setRole(ProjectRole role) {

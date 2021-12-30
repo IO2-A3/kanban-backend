@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -46,7 +47,7 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails, Integer time) {
         Map<String, Object> claims = new HashMap<>();
         var user = userRepository.findUserByUsername(userDetails.getUsername()).get();
-        return createToken(claims, user.getId(), time);
+        return createToken(claims, user.getId().toString(), time);
     }
 
     private String createToken(Map<String, Object> claims, String subject, Integer time) {
@@ -56,7 +57,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final var username = userRepository.findById(extractId(token)).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")).getUsername();
+        final var username = userRepository.findById(UUID.fromString(extractId(token))).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")).getUsername();
         if (isTokenExpired(token)) {
             throw new ExpiredTokenException("Token has expired");
         } else if (!username.equals(userDetails.getUsername())) {
