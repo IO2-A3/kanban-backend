@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
                 .username(command.getWebInput().getUsername())
                 .password(password)
                 .createdAt(timestamp)
-                .id(id).build();
+                .id(UUID.randomUUID()).build();
 
         userRepository.save(user);
     }
@@ -52,24 +53,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteAnUser(String id) {
+    public void deleteAnUser(UUID id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    public String getUserName(String id) {
+    public String getUserName(UUID id) {
         var user = getUser(id);
         return user.getUsername();
     }
 
     @Override
-    public UserIdDto getUserById(String id) {
+    public UserIdDto getUserById(UUID id) {
         var user = getUser(id);
         return mapper.map(user, UserIdDto.class);
     }
 
     @Override
-    public void updateAnUser(String id, UserUpdateWebInput input) {
+    public void updateAnUser(UUID id, UserUpdateWebInput input) {
         var user = getUser(id);
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private User getUser(String id) {
+    private User getUser(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
     }
 }

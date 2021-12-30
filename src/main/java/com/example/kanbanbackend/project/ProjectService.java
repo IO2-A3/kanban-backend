@@ -1,10 +1,12 @@
 package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberRole;
 import com.example.kanbanbackend.project.models.Project;
 import com.example.kanbanbackend.project.models.ProjectIdDto;
 import com.example.kanbanbackend.project.models.ProjectInputDTO;
 import com.example.kanbanbackend.project.models.ProjectSetDto;
+import com.example.kanbanbackend.user.models.UserListDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,17 @@ public class ProjectService {
 
     public ProjectIdDto findProject(UUID projectId){
         var project = projectRepository.findById(projectId).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
-        return mapper.map(project, ProjectIdDto.class);
+
+        var projectMemberRoles = project.getProjectMembers().stream()
+                .map(projectMember -> new ProjectMemberRole(
+                        mapper.map(projectMember.getId().getUser(), UserListDto.class),
+                        projectMember.getRole()))
+                .collect(Collectors.toSet());
+
+        var result = mapper.map(project, ProjectIdDto.class);
+        result.setProjectMemberRoles(projectMemberRoles);
+
+        return result;
     }
 
     public void removeProject(UUID projectID){

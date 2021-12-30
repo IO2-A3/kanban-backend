@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -23,20 +24,20 @@ public class UserController {
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserIdDto getUserById(@PathVariable String id) {
+    public UserIdDto getUserById(@PathVariable UUID id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Resource updated succesfully")
     public void updateAnUser(@RequestBody UserUpdateWebInput input,
-                            @PathVariable String id) {
+                            @PathVariable UUID id) {
         userService.updateAnUser(id, input);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Resource deleted succesfully")
-    public void deleteAnUser(@PathVariable("id") String id) {
+    public void deleteAnUser(@PathVariable("id") UUID id) {
         userService.deleteAnUser(id);
     }
 }

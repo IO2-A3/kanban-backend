@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -59,7 +60,7 @@ public class AuthenticationController {
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
-        var username = userService.getUserName(jwtTokenUtil.extractId(refreshToken));
+        var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
 
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
             var accessToken = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(username), 1000 * 60 * 15);

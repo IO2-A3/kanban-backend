@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -42,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = userRepository.findById(id).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
+            var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
 
             var userDetails = new User(user.getUsername(), user.getPassword(), new ArrayList<>());
 
