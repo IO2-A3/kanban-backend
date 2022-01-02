@@ -13,6 +13,8 @@ import com.example.kanbanbackend.user.models.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class TaskMemberServiceImpl implements TaskMemberService{
@@ -41,13 +43,13 @@ public class TaskMemberServiceImpl implements TaskMemberService{
     private User getUser(TaskMemberCommand command, Task task) {
         var user = userRepository.findById(command.getUserId()).orElseThrow();
 
-        var requestOwner = userRepository.findById(command.getRequestOwnerId()).orElseThrow();
-        validateRequestOwner(task, requestOwner);
+        validateRequestOwner(task, command.getRequestOwnerId());
 
         return user;
     }
 
-    private void validateRequestOwner(Task task, User requestOwner) {
+    private void validateRequestOwner(Task task, UUID requestOwnerId) {
+        var requestOwner = userRepository.findById(requestOwnerId).orElseThrow();
         var project = task.getList().getProject();
         var projectMemberKey = new ProjectMemberKey(requestOwner, project);
 
