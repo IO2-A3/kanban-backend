@@ -1,18 +1,11 @@
 package com.example.kanbanbackend.project.models;
 
 
-import com.example.kanbanbackend.project.ProjectMember.models.ProjectMember;
-import com.example.kanbanbackend.user.models.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import com.example.kanbanbackend.list.models.List;
-
+import com.example.kanbanbackend.project.ProjectMember.models.ProjectMember;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 import org.hibernate.annotations.Type;
-
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

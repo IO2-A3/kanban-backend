@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,5 +66,19 @@ public class JwtUtil {
             throw new IncorrectInputDataException("Wrong username! expected: " + username + " acquired " + userDetails.getUsername());
         }
         return true;
+    }
+
+    public UUID getIdFromRequest(HttpServletRequest request) throws Exception {
+        String token;
+        var header = request.getHeader("Authorization");
+
+        if (header.startsWith("Bearer ")) {
+            token = header.substring(7);
+        } else {
+            throw new Exception("Where is token?");
+        }
+
+
+        return UUID.fromString(extractId(token));
     }
 }

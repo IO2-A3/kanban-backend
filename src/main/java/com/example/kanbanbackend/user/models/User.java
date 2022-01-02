@@ -1,14 +1,12 @@
 package com.example.kanbanbackend.user.models;
 
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMember;
+import com.example.kanbanbackend.task.models.Task;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +27,10 @@ public class User {
     private String username;
     private String password;
     private Timestamp createdAt;
+
+    @ManyToMany(mappedBy = "users")
+    @JsonBackReference
+    private Set<Task> tasks;
 
     @JsonBackReference
     @OneToMany(mappedBy = "id.user")
