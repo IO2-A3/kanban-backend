@@ -1,6 +1,7 @@
 package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.list.models.ListSetDto;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberRole;
 import com.example.kanbanbackend.project.models.Project;
 import com.example.kanbanbackend.project.models.ProjectIdDto;
@@ -45,12 +46,19 @@ public class ProjectService {
 
         var projectMemberRoles = project.getProjectMembers().stream()
                 .map(projectMember -> new ProjectMemberRole(
-                        mapper.map(projectMember.getId().getUser(), UserListDto.class),
-                        projectMember.getRole()))
+                        mapper.map(projectMember.getId().getUser(), UserListDto.class), projectMember.getRole()))
                 .collect(Collectors.toSet());
+
+        var listsSetDto = project.getListSet().stream()
+                .map(list -> mapper.map(list, ListSetDto.class))
+                .collect(Collectors.toSet());
+
 
         var result = mapper.map(project, ProjectIdDto.class);
         result.setProjectMemberRoles(projectMemberRoles);
+        result.setListSet(listsSetDto);
+
+
 
         return result;
     }

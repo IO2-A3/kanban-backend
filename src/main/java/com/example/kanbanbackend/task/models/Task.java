@@ -1,6 +1,7 @@
 package com.example.kanbanbackend.task.models;
 
 import com.example.kanbanbackend.list.models.List;
+import com.example.kanbanbackend.task.taskComment.models.TaskComment;
 import com.example.kanbanbackend.user.models.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,6 +36,11 @@ public class Task {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private Set<User> users;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "task",
+            fetch = FetchType.LAZY)
+    private Set<TaskComment> comments;
 
     private String name;
     private String description; //todo: string -> text

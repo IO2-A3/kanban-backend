@@ -18,7 +18,7 @@ public class TaskInputDto {
     private String description;
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss+0000",
+            pattern = "yyyy-MM-dd HH:mm:ss",
             timezone = "Europe/Berlin")
     private Timestamp dueDate;
 }

@@ -2,6 +2,7 @@ package com.example.kanbanbackend.user.models;
 
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMember;
 import com.example.kanbanbackend.task.models.Task;
+import com.example.kanbanbackend.task.taskComment.models.TaskComment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -35,4 +36,9 @@ public class User {
     @JsonBackReference
     @OneToMany(mappedBy = "id.user")
     private Set<ProjectMember> projectMembers;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY)
+    private Set<TaskComment> comments;
 }

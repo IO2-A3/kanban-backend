@@ -1,6 +1,7 @@
 package com.example.kanbanbackend.authentication;
 
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
+import com.example.kanbanbackend.exceptions.ForbiddenException;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.exceptions.IncorrectInputDataException;
 import com.example.kanbanbackend.user.UserRepository;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.http.HttpRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -71,6 +69,10 @@ public class JwtUtil {
     public UUID getIdFromRequest(HttpServletRequest request) throws Exception {
         String token;
         var header = request.getHeader("Authorization");
+
+        if (Objects.isNull(header)) {
+            throw new ForbiddenException();
+        }
 
         if (header.startsWith("Bearer ")) {
             token = header.substring(7);
