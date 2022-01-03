@@ -1,9 +1,6 @@
 package com.example.kanbanbackend.projectMembershipInvitation.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 public class ProjectMembershipInvitation {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Id

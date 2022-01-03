@@ -1,4 +1,4 @@
-dokonczyc mapowanie
-zamienic zwracane typy w GetMapping na encje zamiast DTOsów
 podlaczyc sie do usera
 pozamieniac listy na sety tam gdzie trzeba
+usunac tabelki ktore hibernate sam robi
+mozna zapraszac kilka razy do tego samego projektu

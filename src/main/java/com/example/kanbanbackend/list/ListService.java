@@ -6,6 +6,8 @@ import com.example.kanbanbackend.list.models.ListIdDto;
 import com.example.kanbanbackend.list.models.ListInputDto;
 import com.example.kanbanbackend.list.models.ListSetDto;
 import com.example.kanbanbackend.project.ProjectRepository;
+import com.example.kanbanbackend.task.TaskRepository;
+import com.example.kanbanbackend.task.models.TaskSetDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class ListService {
     private final ListRepository listRepository;
     private final ProjectRepository projectRepository;
+    private final TaskRepository taskRepository;
     private final ModelMapper mapper;
 
     public UUID createList(ListInputDto listInputDTO){
@@ -44,9 +47,14 @@ public class ListService {
     public Set<ListSetDto> findLists(){
         var lists = listRepository.findAll();
 
-        return lists.stream()
+        var listSet =  lists.stream()
                 .map(list -> mapper.map(list, ListSetDto.class))
                 .collect(Collectors.toSet());
+        for (ListSetDto list : listSet) {
+            list.setTaskSet(taskRepository.findByListId(list.getId()).stream()
+                    .map(task -> mapper.map(task, TaskSetDto.class)).collect(Collectors.toSet()));
+        }
+        return listSet;
     }
 
     public ListIdDto findListById(UUID listId){
