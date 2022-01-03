@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final MyUserDetailsService userDetailsService;
