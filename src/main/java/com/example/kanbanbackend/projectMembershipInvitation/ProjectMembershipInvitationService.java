@@ -2,6 +2,7 @@ package com.example.kanbanbackend.projectMembershipInvitation;
 
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.exceptions.InvitationException;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationAcceptationDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
@@ -23,6 +24,9 @@ public class ProjectMembershipInvitationService {
 
 
     public UUID createInvitation(ProjectMembershipInvitationInputDTO dto){
+        if(isUserAlreadyInvited(dto.getProjectId(),dto.getUserId())){
+            throw new InvitationException("This user already received invitation");
+        }
         userRepository.findById(dto.getUserId()).orElseThrow(() -> new IncorrectIdInputException("User with this id don't exist"));
         var invitation = ProjectMembershipInvitation.builder()
                 .id(UUID.randomUUID())
@@ -58,5 +62,7 @@ public class ProjectMembershipInvitationService {
         repository.deleteById(id);
     }
 
-
+    private boolean isUserAlreadyInvited(UUID projectId, UUID userId){
+        return repository.existsByUserIdAndProjectId(userId,projectId);
+    }
 }
