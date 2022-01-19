@@ -13,5 +13,5 @@ public class ListSetDto {
     private UUID id;
     private String name;
     private int listOrder;
-    private Set<TaskSetDto> taskSet;
+    private Set<TaskSetDto> taskSet; // @TODO: should return TaskIdDto, there is no need to return only a part of Task model
 }
