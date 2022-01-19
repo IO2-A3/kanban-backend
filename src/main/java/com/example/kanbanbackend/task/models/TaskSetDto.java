@@ -14,5 +14,5 @@ public class TaskSetDto {
     private String taskName;
     private String taskListOrder;
     private Set<TaskCommentDto> comments;
-    /* @TODO: Add participants */
+    /* @TODO: Add participants, dueDate etc. there is no need for this DTO altogether, all we need is TaskIdDto */
 }
