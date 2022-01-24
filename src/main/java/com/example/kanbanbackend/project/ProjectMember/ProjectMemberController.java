@@ -15,15 +15,15 @@ import java.util.UUID;
 public class ProjectMemberController {
     private final ProjectMemberService service;
 
-    @PostMapping
-    public ProjectMemberKey addProjectMember(@PathVariable UUID projectId, @PathVariable UUID userId, @RequestBody ProjectMemberWebInput webInput){
-        var command = ProjectMemberCommand.builder()
-                .projectId(projectId)
-                .userId(userId)
-                .role(webInput.getRole())
-                .build();
-        return service.addProjectMember(command);
-    }
+//    @PostMapping
+//    public ProjectMemberKey addProjectMember(@PathVariable UUID projectId, @PathVariable UUID userId, @RequestBody ProjectMemberWebInput webInput){
+//        var command = ProjectMemberCommand.builder()
+//                .projectId(projectId)
+//                .userId(userId)
+//                .role(webInput.getRole())
+//                .build();
+//        return service.addProjectMember(command);
+//    }
 
 
     @PutMapping

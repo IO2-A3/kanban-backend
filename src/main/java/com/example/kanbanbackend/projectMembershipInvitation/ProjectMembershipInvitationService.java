@@ -3,6 +3,8 @@ package com.example.kanbanbackend.projectMembershipInvitation;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.exceptions.InvitationException;
+import com.example.kanbanbackend.project.ProjectMember.ProjectMemberRepository;
+import com.example.kanbanbackend.project.ProjectMember.ProjectMemberServiceImpl;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationAcceptationDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class ProjectMembershipInvitationService {
     private ProjectMembershipInvitationRepository repository;
     private UserRepository userRepository;
+    private ProjectMemberServiceImpl projectMemberService;
 
 
     public UUID createInvitation(ProjectMembershipInvitationInputDTO dto){
@@ -54,7 +57,12 @@ public class ProjectMembershipInvitationService {
 
         invitation.setPending(false);
         invitation.setIsAccepted(decision);
+
         repository.save(invitation);
+
+        if(acceptationDTO.isResolve()){
+            projectMemberService.addProjectMember(new ProjectMembershipInvitationInputDTO(invitation.getProjectId(),invitation.getUserId()));
+        }
 
     }
 
