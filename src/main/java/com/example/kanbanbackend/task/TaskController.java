@@ -2,6 +2,7 @@ package com.example.kanbanbackend.task;
 
 import com.example.kanbanbackend.task.models.TaskIdDto;
 import com.example.kanbanbackend.task.models.TaskInputDto;
+import com.example.kanbanbackend.task.models.TaskMoveDto;
 import com.example.kanbanbackend.task.models.TaskSetDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,4 +36,10 @@ public class TaskController {
     public void deleteTask(@PathVariable UUID id){
         taskService.removeTask(id);
     }
+
+    @PutMapping()
+    public void moveTask(@Valid @RequestBody TaskMoveDto dto){
+        taskService.moveTask(dto);
+    }
+
 }

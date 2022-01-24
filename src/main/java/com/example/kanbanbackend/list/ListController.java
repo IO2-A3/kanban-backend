@@ -34,7 +34,7 @@ public class ListController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteList(UUID id){
+    public void deleteList(@PathVariable UUID id){
         listService.removeList(id);
     }
 }
