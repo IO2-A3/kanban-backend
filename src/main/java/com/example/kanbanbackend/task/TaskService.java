@@ -48,6 +48,12 @@ public class TaskService {
         return mapper.map(task, TaskIdDto.class);
     }
 
+    public void changeOrder(UUID taksId, Integer order){
+        var task = taskRepository.findById(taksId).get();
+        task.setListOrder(order);
+        taskRepository.save(task);
+    }
+
     public void removeTask(UUID taskId){
         taskRepository.deleteById(taskId);
     }

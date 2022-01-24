@@ -35,4 +35,9 @@ public class TaskController {
     public void deleteTask(@PathVariable UUID id){
         taskService.removeTask(id);
     }
+
+    @PutMapping("/{taskId}")
+    public void changeOrder(@PathVariable UUID taskId, Integer order){
+        taskService.changeOrder(taskId,order);
+    }
 }
