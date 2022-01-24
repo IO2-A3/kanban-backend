@@ -4,7 +4,6 @@ import com.example.kanbanbackend.project.ProjectMember.models.ProjectMember;
 import com.example.kanbanbackend.task.models.Task;
 import com.example.kanbanbackend.task.taskComment.models.TaskComment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,8 +21,6 @@ public class User {
 
     @Id
     private UUID id;
-    private String firstName;
-    private String lastName;
     private String email;
     private String username;
     private String password;

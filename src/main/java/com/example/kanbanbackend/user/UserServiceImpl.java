@@ -1,6 +1,5 @@
 package com.example.kanbanbackend.user;
 
-import com.example.kanbanbackend.UI.idGenerator.IdGenerator;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.user.models.*;
 import lombok.AllArgsConstructor;
@@ -20,21 +19,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDataValidator userDataValidator;
-    private final IdGenerator idGenerator;
     private final ModelMapper mapper;
 
     @Override
     public void addUser(UserServiceCommand command) {
         userDataValidator.validateUserWebInput(command.getWebInput());
 
-        var id = idGenerator.generateId();
         var password = passwordEncoder.encode(command.getWebInput().getPassword());
         var timestamp = new Timestamp(System.currentTimeMillis());
 
         var user = User.builder()
                 .email(command.getWebInput().getEmail())
-                .firstName(command.getWebInput().getFirstName())
-                .lastName(command.getWebInput().getLastName())
                 .username(command.getWebInput().getUsername())
                 .password(password)
                 .createdAt(timestamp)

@@ -10,8 +10,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class UserIdDto {
-    private String firstName;
-    private String lastName;
     private String email;
     private String username;
     private Timestamp createdAt;

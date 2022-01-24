@@ -16,8 +16,4 @@ public class UserWebInput {
     private String password;
     @NotBlank
     private String email;
-    @NotBlank
-    private String firstName;
-    @NotBlank
-    private String lastName;
 }
