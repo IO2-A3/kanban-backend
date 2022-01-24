@@ -2,10 +2,7 @@ package com.example.kanbanbackend.task;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.list.ListRepository;
-import com.example.kanbanbackend.task.models.Task;
-import com.example.kanbanbackend.task.models.TaskIdDto;
-import com.example.kanbanbackend.task.models.TaskInputDto;
-import com.example.kanbanbackend.task.models.TaskSetDto;
+import com.example.kanbanbackend.task.models.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -48,9 +45,10 @@ public class TaskService {
         return mapper.map(task, TaskIdDto.class);
     }
 
-    public void changeOrder(UUID taksId, Integer order){
-        var task = taskRepository.findById(taksId).get();
-        task.setListOrder(order);
+    public void moveTask(TaskMoveDto dto){
+        var task = taskRepository.findById(dto.getTaskId()).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
+        task.setList(listRepository.findById(dto.getListId()).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")));
+        task.setListOrder(dto.getOrder());
         taskRepository.save(task);
     }
 

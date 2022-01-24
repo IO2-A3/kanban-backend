@@ -41,7 +41,7 @@ public class Task {
 
     private String name;
     private String description; //todo: string -> text
-    private Integer listOrder;
+    private int listOrder;
     private Timestamp dueDate;
 
 
