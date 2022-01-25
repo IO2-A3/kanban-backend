@@ -2,9 +2,11 @@ package com.example.kanbanbackend.authentication;
 
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.project.ProjectMember.models.ProjectRole;
 import com.example.kanbanbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -45,7 +48,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
 
-            var userDetails = new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+            var userProjectsIdsWhoseIsOwner = user.getProjectMembers().stream()
+                    .filter(projectMember -> projectMember.getRole() == ProjectRole.OWNER)
+                    .map(projectMember -> new SimpleGrantedAuthority(projectMember.getId().getProject().getId().toString()))
+                    .collect(Collectors.toList());
+
+            System.out.println(userProjectsIdsWhoseIsOwner);
+
+            var userDetails = new User(user.getUsername(), user.getPassword(), userProjectsIdsWhoseIsOwner);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
