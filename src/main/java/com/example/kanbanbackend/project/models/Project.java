@@ -27,7 +27,8 @@ public class Project {
 
     @JsonBackReference
     @OneToMany(mappedBy = "id.project",
-            fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER,
+    cascade = CascadeType.REMOVE)
     private Set<ProjectMember> projectMembers;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -34,7 +34,8 @@ public class User {
     private Set<Task> tasks;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "id.user")
+    @OneToMany(mappedBy = "id.user",
+            fetch = FetchType.EAGER)
     private Set<ProjectMember> projectMembers;
 
     @JsonBackReference
