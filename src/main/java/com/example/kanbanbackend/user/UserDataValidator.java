@@ -14,7 +14,6 @@ public class UserDataValidator {
 
     public void validateUserWebInput(UserWebInput webInput) {
         new EmailSenderValidator().validateEmail(webInput.getEmail());
-
         checkIfUserWithSuchUsernameExists(webInput.getUsername());
         checkIfUserWithSuchEmailExists(webInput.getEmail());
     }

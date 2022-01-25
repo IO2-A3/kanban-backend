@@ -4,6 +4,8 @@ import com.example.kanbanbackend.UI.MyUserDetailsService;
 import com.example.kanbanbackend.authentication.models.AuthenticateRequest;
 import com.example.kanbanbackend.authentication.models.AuthenticationDto;
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
+import com.example.kanbanbackend.exceptions.WrongEmailException;
+import com.example.kanbanbackend.exceptions.WrongUsernameException;
 import com.example.kanbanbackend.user.UserService;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
 import com.example.kanbanbackend.user.models.UserWebInput;
@@ -56,6 +58,12 @@ public class AuthenticationController {
     @ResponseStatus(value = HttpStatus.CREATED, reason = "User created successfully")
     public void registerAnUser(@Valid @RequestBody UserWebInput webInput) {
         userService.addUser(UserServiceCommand.builder().webInput(webInput).build());
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({WrongEmailException.class, WrongUsernameException.class})
+    public RuntimeException registerExceptions(RuntimeException exception) {
+        return exception;
     }
 
     @PostMapping("/refreshtoken")
