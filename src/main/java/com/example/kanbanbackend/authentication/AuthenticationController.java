@@ -60,11 +60,6 @@ public class AuthenticationController {
         userService.addUser(UserServiceCommand.builder().webInput(webInput).build());
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({WrongEmailException.class, WrongUsernameException.class})
-    public RuntimeException registerExceptions(RuntimeException exception) {
-        return exception;
-    }
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
