@@ -47,8 +47,12 @@ public class AuthenticationController {
         final String accessToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 15);
         final String refreshToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 60 * 24 * 7);
 
-        var cookie = new Cookie("RefreshToken", refreshToken);
+        Cookie cookie = new Cookie("RefreshToken", refreshToken);
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        // @TODO: change to production domain
+        cookie.setDomain("localhost");
+        cookie.setSecure(true);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(new AuthenticationDto(accessToken));
