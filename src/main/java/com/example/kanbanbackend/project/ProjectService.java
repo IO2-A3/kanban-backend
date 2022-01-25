@@ -2,6 +2,7 @@ package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.list.models.ListSetDto;
+import com.example.kanbanbackend.project.ProjectMember.ProjectMemberServiceImpl;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberRole;
 import com.example.kanbanbackend.project.models.Project;
 import com.example.kanbanbackend.project.models.ProjectIdDto;
@@ -21,16 +22,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMemberServiceImpl projectMemberService;
     private final ModelMapper mapper;
 
     public UUID createProject(ProjectInputDTO projectInputDTO){
+        var projectId = UUID.randomUUID();
+
         var project = Project.builder()
-                .id(UUID.randomUUID())
+                .id(projectId)
                 .name(projectInputDTO.getName())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         projectRepository.save(project);
+
+        projectMemberService.addProjectMemberOwner(projectId, projectInputDTO.getUserId());
         return project.getId();
     }
 

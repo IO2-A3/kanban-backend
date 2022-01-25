@@ -42,6 +42,15 @@ public class ProjectMemberServiceImpl implements ProjectMemberService{
     }
 
     @Override
+    public void addProjectMemberOwner(UUID projectId, UUID userId) {
+        projectMemberRepository.save(
+                ProjectMember.builder().role(ProjectRole.OWNER)
+                .id(getProjectMemberKey(projectId, userId))
+                .build()
+        );
+    }
+
+    @Override
     public void updateProjectMemberRole(ProjectMemberCommand command) {
         var projectMember = projectMemberRepository.findById(getProjectMemberKey(command.getProjectId(), command.getUserId())).orElseThrow(() -> new IncorrectIdInputException("Wrong project or user!"));
 
