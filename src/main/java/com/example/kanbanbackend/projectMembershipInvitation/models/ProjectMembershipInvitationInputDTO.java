@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectMembershipInvitationInputDTO {
     @NotNull
-    private UUID userId;
+    private final UUID userId;
     @NotNull
-    private UUID projectId;
+    private final UUID projectId;
 }

@@ -70,7 +70,6 @@ public class ProjectService {
     }
 
     public void removeProject(UUID projectID){
-        var project = projectRepository.findById(projectID).get();
-        projectRepository.delete(project);
+        projectRepository.deleteById(projectID);
     }
 }

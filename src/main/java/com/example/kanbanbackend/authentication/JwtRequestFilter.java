@@ -48,14 +48,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
 
-            var userProjectsIdsWhoseIsOwner = user.getProjectMembers().stream()
-                    .filter(projectMember -> projectMember.getRole() == ProjectRole.OWNER)
+            var userProjectsIds = user.getProjectMembers().stream()
                     .map(projectMember -> new SimpleGrantedAuthority(projectMember.getId().getProject().getId().toString()))
                     .collect(Collectors.toList());
 
-            System.out.println(userProjectsIdsWhoseIsOwner);
+            System.out.println(userProjectsIds);
 
-            var userDetails = new User(user.getUsername(), user.getPassword(), userProjectsIdsWhoseIsOwner);
+            var userDetails = new User(user.getUsername(), user.getPassword(), userProjectsIds);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 

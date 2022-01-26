@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.project.models;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 public class ProjectInputDTO {
     @NotBlank
     private String name;

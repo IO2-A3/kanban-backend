@@ -7,6 +7,8 @@ import com.example.kanbanbackend.list.models.ListInputDto;
 import com.example.kanbanbackend.list.models.ListSetDto;
 import com.example.kanbanbackend.project.ProjectRepository;
 import com.example.kanbanbackend.task.TaskRepository;
+import com.example.kanbanbackend.task.TaskService;
+import com.example.kanbanbackend.task.models.Task;
 import com.example.kanbanbackend.task.models.TaskSetDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ public class ListService {
     private final ListRepository listRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
+    private final TaskService taskService;
     private final ModelMapper mapper;
 
     public UUID createList(ListInputDto listInputDTO){
@@ -32,7 +35,7 @@ public class ListService {
         var list = List.builder()
                 .id(UUID.randomUUID())
                 .name(listInputDTO.getName())
-                .project(projectRepository.findById(listInputDTO.getProjectId()).get())
+                .project(project)
                 .listOrder(++quantity)//todo: zrobic order, zliczac ile jest list w projekcie i dodawac na koncu z order ostatniej +1
                 .build();
 

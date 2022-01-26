@@ -5,6 +5,7 @@ import com.example.kanbanbackend.task.models.TaskInputDto;
 import com.example.kanbanbackend.task.models.TaskMoveDto;
 import com.example.kanbanbackend.task.models.TaskSetDto;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -7,6 +7,7 @@ import com.example.kanbanbackend.task.taskComment.models.TaskCommentSetDto;
 import com.example.kanbanbackend.task.taskComment.models.TaskCommentWebInput;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

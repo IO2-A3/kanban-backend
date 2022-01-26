@@ -6,6 +6,8 @@ import com.example.kanbanbackend.user.models.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -25,6 +27,7 @@ public class Task {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List list;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -36,7 +39,7 @@ public class Task {
 
     @JsonBackReference
     @OneToMany(mappedBy = "task",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<TaskComment> comments;
 
     private String name;

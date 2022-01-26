@@ -3,7 +3,9 @@ package com.example.kanbanbackend.projectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationAcceptationDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
+
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +30,7 @@ public class ProjectMembershipInvitationController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority(#dto.projectId)")
     public UUID addInvitation(@Valid @RequestBody ProjectMembershipInvitationInputDTO dto){
         return service.createInvitation(dto);
     }

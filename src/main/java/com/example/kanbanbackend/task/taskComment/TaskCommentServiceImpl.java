@@ -43,6 +43,11 @@ public class TaskCommentServiceImpl implements TaskCommentService{
         var user = userRepository.findById(command.getUserId()).orElseThrow();
         var task = taskRepository.findById(command.getTaskId()).orElseThrow();
 
+        if (user.getProjectMembers().stream().noneMatch(projectMember -> projectMember.getId().getProject().getId()
+                .equals(task.getList().getProject().getId()))) {
+            throw new ForbiddenException();
+        }
+
         var currentTime = new Timestamp(System.currentTimeMillis());
         var id = UUID.randomUUID();
 
@@ -88,7 +93,7 @@ public class TaskCommentServiceImpl implements TaskCommentService{
         var project = task.getList().getProject();
         var projectMemberKey = new ProjectMemberKey(requestOwner, project);
 
-        var requestProjectMember = projectMemberRepository.findById(projectMemberKey).orElseThrow();
+        var requestProjectMember = projectMemberRepository.findById(projectMemberKey).orElseThrow(ForbiddenException::new);
         if (requestProjectMember.getRole() != ProjectRole.OWNER) {
             throw new ForbiddenException();
         }
