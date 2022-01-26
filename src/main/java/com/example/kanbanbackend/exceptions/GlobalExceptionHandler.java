@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.exceptions;
 
+import com.example.kanbanbackend.exceptions.authentication.BadCredentialsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,8 +19,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({WrongEmailException.class, WrongUsernameException.class})
-    public ResponseEntity<Object> registerExceptions(RuntimeException exception) {
+    @ExceptionHandler({WrongEmailException.class, WrongUsernameException.class, BadCredentialsException.class})
+    public ResponseEntity<Object> registerSimpleTextExceptions(RuntimeException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

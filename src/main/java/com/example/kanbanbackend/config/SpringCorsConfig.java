@@ -12,7 +12,7 @@ public class SpringCorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**").allowCredentials(true).allowedOrigins("http://localhost:3000");
+                registry.addMapping("/api/**").allowCredentials(true).allowedOrigins("http://localhost:3000", "http://localhost:3001");
             }
         };
     }

@@ -4,17 +4,16 @@ import com.example.kanbanbackend.UI.MyUserDetailsService;
 import com.example.kanbanbackend.authentication.models.AuthenticateRequest;
 import com.example.kanbanbackend.authentication.models.AuthenticationDto;
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
-import com.example.kanbanbackend.exceptions.WrongEmailException;
-import com.example.kanbanbackend.exceptions.WrongUsernameException;
 import com.example.kanbanbackend.user.UserService;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
 import com.example.kanbanbackend.user.models.UserWebInput;
+import com.example.kanbanbackend.exceptions.authentication.BadCredentialsException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -32,13 +31,14 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/login")
+    @ResponseStatus(value = HttpStatus.OK, reason = "User created successfully")
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticateRequest authenticateRequest, HttpServletResponse response) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticateRequest.getUsername(), authenticateRequest.getPassword())
             );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password");
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException();
         }
 
         final var userDetails = userDetailsService
