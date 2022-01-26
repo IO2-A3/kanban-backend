@@ -4,7 +4,10 @@ import com.example.kanbanbackend.UI.MyUserDetailsService;
 import com.example.kanbanbackend.authentication.models.AuthenticateRequest;
 import com.example.kanbanbackend.authentication.models.AuthenticationDto;
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
+import com.example.kanbanbackend.authentication.models.PublicTokenDto;
+import com.example.kanbanbackend.user.UserRepository;
 import com.example.kanbanbackend.user.UserService;
+import com.example.kanbanbackend.user.models.UserPublicDTO;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
 import com.example.kanbanbackend.user.models.UserWebInput;
 import com.example.kanbanbackend.exceptions.authentication.BadCredentialsException;
@@ -31,8 +34,8 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/login")
-    @ResponseStatus(value = HttpStatus.OK, reason = "User created successfully")
-    public ResponseEntity<?> login(@RequestBody @Valid AuthenticateRequest authenticateRequest, HttpServletResponse response) throws Exception {
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<AuthenticationDto> login(@RequestBody @Valid AuthenticateRequest authenticateRequest, HttpServletResponse response) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticateRequest.getUsername(), authenticateRequest.getPassword())
@@ -43,9 +46,10 @@ public class AuthenticationController {
 
         final var userDetails = userDetailsService
                 .loadUserByUsername(authenticateRequest.getUsername());
-
         final String accessToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 15);
         final String refreshToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 60 * 24 * 7);
+
+        UserPublicDTO user = userService.getUserByUsername(authenticateRequest.getUsername());
 
         Cookie cookie = new Cookie("RefreshToken", refreshToken);
         cookie.setHttpOnly(true);
@@ -55,7 +59,12 @@ public class AuthenticationController {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new AuthenticationDto(accessToken));
+        return ResponseEntity.ok(
+                AuthenticationDto.builder()
+                        .accessToken(accessToken)
+                        .user(user)
+                        .build()
+        );
     }
 
     @PostMapping("/register")
@@ -66,13 +75,13 @@ public class AuthenticationController {
 
 
     @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
+    public ResponseEntity<PublicTokenDto> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
         var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
 
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
             var accessToken = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(username), 1000 * 60 * 15);
 
-            return ResponseEntity.ok(new AuthenticationDto(accessToken));
+            return ResponseEntity.ok(new PublicTokenDto(accessToken));
         } else {
             throw new ExpiredTokenException("Token has expired!");
         }

@@ -1,9 +1,6 @@
 package com.example.kanbanbackend.user;
 
-import com.example.kanbanbackend.user.models.UserIdDto;
-import com.example.kanbanbackend.user.models.UserListDto;
-import com.example.kanbanbackend.user.models.UserServiceCommand;
-import com.example.kanbanbackend.user.models.UserUpdateWebInput;
+import com.example.kanbanbackend.user.models.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +15,8 @@ public interface UserService {
     String getUserName(UUID id);
 
     UserIdDto getUserById(UUID id);
+
+    UserPublicDTO getUserByUsername(String username);
 
     void updateAnUser(UUID id, UserUpdateWebInput input);
 }

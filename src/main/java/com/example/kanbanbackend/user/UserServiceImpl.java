@@ -1,7 +1,9 @@
 package com.example.kanbanbackend.user;
 
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.exceptions.IncorrectInputDataException;
 import com.example.kanbanbackend.user.models.*;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -72,6 +74,11 @@ public class UserServiceImpl implements UserService {
         mapper.map(input, user);
 
         userRepository.save(user);
+    }
+
+    public UserPublicDTO getUserByUsername(String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new IncorrectInputDataException("User with given username doesn't exist"));
+        return mapper.map(user, UserPublicDTO.class);
     }
 
     private User getUser(UUID id) {
