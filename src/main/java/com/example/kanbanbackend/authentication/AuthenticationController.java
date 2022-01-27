@@ -74,14 +74,19 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<PublicTokenDto> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
+    @PostMapping("/refresh_token")
+    public ResponseEntity<AuthenticationDto> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
         var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
 
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
             var accessToken = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(username), 1000 * 60 * 15);
-
-            return ResponseEntity.ok(new PublicTokenDto(accessToken));
+            UserPublicDTO user = userService.getUserByUsername(username);
+            return ResponseEntity.ok(
+                    AuthenticationDto.builder()
+                            .accessToken(accessToken)
+                            .user(user)
+                            .build()
+            );
         } else {
             throw new ExpiredTokenException("Token has expired!");
         }
