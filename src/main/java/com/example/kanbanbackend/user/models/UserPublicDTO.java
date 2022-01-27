@@ -6,6 +6,9 @@ import lombok.Setter;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+/*
+* Minimal User fields that are safe to expose to the client.
+* */
 @Getter
 @Setter
 public class UserPublicDTO {
