@@ -17,16 +17,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final MyUserDetailsService userDetailsService;
@@ -57,6 +60,7 @@ public class AuthenticationController {
         // @TODO: change to production domain
         cookie.setDomain("localhost");
         cookie.setSecure(true);
+        cookie.setMaxAge(1000 * 60 * 60 * 24 * 7);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(
@@ -77,7 +81,6 @@ public class AuthenticationController {
     @PostMapping("/refresh_token")
     public ResponseEntity<AuthenticationDto> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
         var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
-
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
             var accessToken = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(username), 1000 * 60 * 15);
             UserPublicDTO user = userService.getUserByUsername(username);
@@ -90,5 +93,17 @@ public class AuthenticationController {
         } else {
             throw new ExpiredTokenException("Token has expired!");
         }
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie("RefreshToken", null);
+        cookie.setPath("/");
+        cookie.setDomain("localhost");
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return ResponseEntity.ok(true);
     }
 }
