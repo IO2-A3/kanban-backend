@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class TaskCommentDto {
-    private String userFirstName;
-    private String userLastName;
     private Timestamp editedAt;
     private String content;
 }

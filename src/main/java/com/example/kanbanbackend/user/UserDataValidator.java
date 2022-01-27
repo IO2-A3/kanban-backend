@@ -14,11 +14,8 @@ public class UserDataValidator {
 
     public void validateUserWebInput(UserWebInput webInput) {
         new EmailSenderValidator().validateEmail(webInput.getEmail());
-
         checkIfUserWithSuchUsernameExists(webInput.getUsername());
         checkIfUserWithSuchEmailExists(webInput.getEmail());
-
-        checkFirstOrLastName(new String[]{webInput.getFirstName(), webInput.getLastName()});
     }
 
     private void checkIfUserWithSuchEmailExists(String email) {
@@ -33,7 +30,7 @@ public class UserDataValidator {
         }
     }
 
-    private void checkFirstOrLastName(String[] names) {
+    private void checkIfArrOfStringsContainOnlyLetters(String[] names) {
         for (var name :
                 names) {
             if (!name.matches("[a-zA-Z]+")) {

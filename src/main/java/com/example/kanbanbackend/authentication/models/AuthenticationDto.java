@@ -1,11 +1,11 @@
 package com.example.kanbanbackend.authentication.models;
 
-import lombok.AllArgsConstructor;
+import com.example.kanbanbackend.user.models.UserPublicDTO;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@AllArgsConstructor
+@SuperBuilder
 @Getter
-public class AuthenticationDto {
-    private final String accessToken;
-    private final String tokenType = "Bearer";
+public class AuthenticationDto extends PublicTokenDto{
+    private UserPublicDTO user;
 }

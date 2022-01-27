@@ -11,9 +11,9 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=username
       - POSTGRES_DB=database
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
 
-#volumes:
-#  volumedataholder:
-#  postgres_data:
-#    driver: local
+volumes:
+  pgdata:

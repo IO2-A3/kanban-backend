@@ -1,8 +1,9 @@
 package com.example.kanbanbackend.user;
 
-import com.example.kanbanbackend.UI.idGenerator.IdGenerator;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
+import com.example.kanbanbackend.exceptions.IncorrectInputDataException;
 import com.example.kanbanbackend.user.models.*;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -20,21 +21,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDataValidator userDataValidator;
-    private final IdGenerator idGenerator;
     private final ModelMapper mapper;
 
     @Override
     public void addUser(UserServiceCommand command) {
         userDataValidator.validateUserWebInput(command.getWebInput());
 
-        var id = idGenerator.generateId();
         var password = passwordEncoder.encode(command.getWebInput().getPassword());
         var timestamp = new Timestamp(System.currentTimeMillis());
 
         var user = User.builder()
                 .email(command.getWebInput().getEmail())
-                .firstName(command.getWebInput().getFirstName())
-                .lastName(command.getWebInput().getLastName())
                 .username(command.getWebInput().getUsername())
                 .password(password)
                 .createdAt(timestamp)
@@ -77,6 +74,11 @@ public class UserServiceImpl implements UserService {
         mapper.map(input, user);
 
         userRepository.save(user);
+    }
+
+    public UserPublicDTO getUserByUsername(String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new IncorrectInputDataException("User with given username doesn't exist"));
+        return mapper.map(user, UserPublicDTO.class);
     }
 
     private User getUser(UUID id) {
