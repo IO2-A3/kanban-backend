@@ -5,6 +5,11 @@ import com.example.kanbanbackend.project.models.ProjectIdDto;
 import com.example.kanbanbackend.project.models.ProjectInputDTO;
 import com.example.kanbanbackend.project.models.ProjectSetDto;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +26,9 @@ public class ProjectController {
 
     @GetMapping
     public Set<ProjectSetDto> getProjects(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Checking if anonymous (no token provided, if invalid token provided server responds with an error)
+        System.out.println(authentication instanceof AnonymousAuthenticationToken);
         return projectService.findProjects();
     }
 

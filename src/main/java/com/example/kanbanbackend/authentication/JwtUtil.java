@@ -56,12 +56,17 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final var username = userRepository.findById(UUID.fromString(extractId(token))).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")).getUsername();
+    public String extractBearerFromHeader(String header) throws Exception{
+        if (header.startsWith("Bearer ")) {
+            return header.substring(7);
+        } else {
+            throw new Exception("Invalid bearer token structure");
+        }
+    }
+
+    public Boolean validateToken(String token) {
         if (isTokenExpired(token)) {
             throw new ExpiredTokenException("Token has expired");
-        } else if (!username.equals(userDetails.getUsername())) {
-            throw new IncorrectInputDataException("Wrong username! expected: " + username + " acquired " + userDetails.getUsername());
         }
         return true;
     }
@@ -74,12 +79,7 @@ public class JwtUtil {
             throw new ForbiddenException();
         }
 
-        if (header.startsWith("Bearer ")) {
-            token = header.substring(7);
-        } else {
-            throw new Exception("Where is token?");
-        }
-
+        token = extractBearerFromHeader(header);
 
         return UUID.fromString(extractId(token));
     }
