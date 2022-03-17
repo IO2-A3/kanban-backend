@@ -5,6 +5,7 @@ import com.example.kanbanbackend.project.models.ProjectIdDto;
 import com.example.kanbanbackend.project.models.ProjectInputDTO;
 import com.example.kanbanbackend.project.models.ProjectSetDto;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,27 +26,32 @@ public class ProjectController {
     private final JwtUtil jwtUtil;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public Set<ProjectSetDto> getProjects(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        authentication.getAuthorities();
+        System.out.println(authentication.getAuthorities());
         // Checking if anonymous (no token provided, if invalid token provided server responds with an error)
-        System.out.println(authentication instanceof AnonymousAuthenticationToken);
+//        System.out.println(authentication instanceof AnonymousAuthenticationToken);
         return projectService.findProjects();
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
     public ProjectIdDto getProject(@PathVariable UUID id){
         return projectService.findProject(id);
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO, HttpServletRequest request) throws Exception {
         var userId = jwtUtil.getIdFromRequest(request);
         projectInputDTO.setUserId(userId);
         return projectService.createProject(projectInputDTO);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteProject(@PathVariable UUID id){
-        projectService.removeProject(id);
-    }
+//    @DeleteMapping("{id}")
+//    public void deleteProject(@PathVariable UUID id){
+//        projectService.removeProject(id);
+//    }
 }

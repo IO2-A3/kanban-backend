@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 jwt = jwtUtil.extractBearerFromHeader(authorizationHeader);
                 id = jwtUtil.extractId(jwt);
             } catch (Exception e) {
-                // @TODO: change exception
+                // @TODO: change exception to 403
                 throw new ExpiredTokenException("Token is probably expired!");
             }
         }
