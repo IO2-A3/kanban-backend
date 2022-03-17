@@ -20,24 +20,27 @@ public class ListController {
     private final ListService listService;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public Set<ListSetDto> getLists(){
         return listService.findLists();
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
     public ListIdDto getListById(@PathVariable UUID id){
         return listService.findListById(id);
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     @OwnerPermission(value = "#inputDto.projectId")
     public UUID addList(@Valid @RequestBody ListInputDto inputDto){
         return listService.createList(inputDto);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteList(@PathVariable UUID id){
-        listService.removeList(id);
-    }
+//    @DeleteMapping("{id}")
+//    public void deleteList(@PathVariable UUID id){
+//        listService.removeList(id);
+//    }
 }
 

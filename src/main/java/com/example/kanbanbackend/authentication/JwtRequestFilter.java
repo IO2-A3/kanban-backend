@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,16 +35,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String id = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        if (authorizationHeader != null) {
             try {
+                jwt = jwtUtil.extractBearerFromHeader(authorizationHeader);
                 id = jwtUtil.extractId(jwt);
             } catch (Exception e) {
+                // @TODO: change exception to 403
                 throw new ExpiredTokenException("Token is probably expired!");
             }
         }
 
-        if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        // Check if token is not malformed and if stores user ID
+        if (authorizationHeader != null && jwtUtil.validateToken(jwt) && id != null) {
             var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
 
             var userProjectsIdsWhoseIsOwner = user.getProjectMembers().stream()
@@ -53,21 +54,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     .map(projectMember -> new SimpleGrantedAuthority(projectMember.getId().getProject().getId().toString()))
                     .collect(Collectors.toList());
 
-            System.out.println(userProjectsIdsWhoseIsOwner);
-
             var userDetails = new User(user.getUsername(), user.getPassword(), userProjectsIdsWhoseIsOwner);
 
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+            // Insert authenticated user data into Security Context
+            var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
 
-                var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
+            usernamePasswordAuthenticationToken
+                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
