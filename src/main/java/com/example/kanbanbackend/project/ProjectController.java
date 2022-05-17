@@ -1,9 +1,14 @@
 package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.authentication.JwtUtil;
+import com.example.kanbanbackend.list.ListService;
+import com.example.kanbanbackend.list.models.ListIdDto;
+import com.example.kanbanbackend.list.models.ListInputDto;
+import com.example.kanbanbackend.list.models.ListSetDto;
 import com.example.kanbanbackend.project.models.ProjectIdDto;
 import com.example.kanbanbackend.project.models.ProjectInputDTO;
 import com.example.kanbanbackend.project.models.ProjectSetDto;
+import com.example.kanbanbackend.security.OwnerPermission;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,6 +28,7 @@ import java.util.UUID;
 @RequestMapping("/api/project")
 public class ProjectController {
     private final ProjectService projectService;
+    private final ListService listService;
     private final JwtUtil jwtUtil;
 
     @GetMapping
@@ -49,9 +55,29 @@ public class ProjectController {
         projectInputDTO.setUserId(userId);
         return projectService.createProject(projectInputDTO);
     }
-
-//    @DeleteMapping("{id}")
-//    public void deleteProject(@PathVariable UUID id){
-//        projectService.removeProject(id);
+    ///listy
+//    @GetMapping("/list")
+//    @PreAuthorize("isAuthenticated()")
+//    public Set<ListSetDto> getLists(){
+//        return listService.findLists();
 //    }
+//
+//    @GetMapping("/list/{id}")
+//    @PreAuthorize("isAuthenticated()")
+//    public ListIdDto getListById(@PathVariable UUID id){
+//        return listService.findListById(id);
+//    }
+
+    @PostMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    @OwnerPermission(value = "#inputDto.projectId")
+    public UUID addList(@Valid @RequestBody ListInputDto inputDto){
+        return listService.createList(inputDto);
+    }
+
+//    @DeleteMapping("/list/{id}")
+//    public void deleteList(@PathVariable UUID id){
+//        listService.removeList(id);
+//    }
+
 }
