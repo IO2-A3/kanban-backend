@@ -38,9 +38,9 @@ public class ListController {
         return listService.createList(inputDto);
     }
 
-//    @DeleteMapping("{id}")
-//    public void deleteList(@PathVariable UUID id){
-//        listService.removeList(id);
-//    }
+    @DeleteMapping("{id}")
+    public void deleteList(@PathVariable UUID id){
+        listService.removeList(id);
+    }
 }
 
