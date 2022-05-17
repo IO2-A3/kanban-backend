@@ -4,9 +4,9 @@ services:
 
   database:
     image: postgres:14.0-alpine
-    container_name: database
+    container_name: databaseKanbanBoard
     ports:
-      - "8080:5432"
+      - "8090:5432"
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=username

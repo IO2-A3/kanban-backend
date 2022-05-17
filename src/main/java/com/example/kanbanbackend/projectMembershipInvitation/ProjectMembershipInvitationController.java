@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -24,12 +25,11 @@ public class ProjectMembershipInvitationController {
         return service.findInvitations();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{userId}")
     @PreAuthorize("isAuthenticated()")
-    public Optional<ProjectMembershipInvitation> getInvitation(@PathVariable UUID id){
-        return service.findInvitation(id);
+    public List<ProjectMembershipInvitation> getInvitationsByUserId(@PathVariable UUID userId){
+        return service.findInvitationsByUserId(userId);
     }
-
     @PostMapping()
     @PreAuthorize("isAuthenticated()")
     public UUID addInvitation(@Valid @RequestBody ProjectMembershipInvitationInputDTO dto){
@@ -44,8 +44,5 @@ public class ProjectMembershipInvitationController {
 
 
 
-//    @DeleteMapping("/{id}")
-//    public void deleteInvitation(@PathVariable UUID id){
-//        service.removeInvitation(id);
-//    }
+
 }
