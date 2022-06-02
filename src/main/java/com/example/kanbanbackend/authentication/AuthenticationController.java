@@ -61,7 +61,7 @@ public class AuthenticationController {
         cookie.setPath("/");
         // @TODO: change to production domain
         cookie.setDomain("localhost");
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
         cookie.setMaxAge(1000 * 60 * 60 * 24 * 7);
         response.addCookie(cookie);
 
