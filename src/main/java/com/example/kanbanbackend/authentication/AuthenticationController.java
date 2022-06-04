@@ -1,11 +1,8 @@
 package com.example.kanbanbackend.authentication;
 
-import com.example.kanbanbackend.UI.MyUserDetailsService;
 import com.example.kanbanbackend.authentication.models.AuthenticateRequest;
 import com.example.kanbanbackend.authentication.models.AuthenticationDto;
 import com.example.kanbanbackend.authentication.models.ExpiredTokenException;
-import com.example.kanbanbackend.authentication.models.PublicTokenDto;
-import com.example.kanbanbackend.user.UserRepository;
 import com.example.kanbanbackend.user.UserService;
 import com.example.kanbanbackend.user.models.UserPublicDTO;
 import com.example.kanbanbackend.user.models.UserServiceCommand;
@@ -29,7 +26,6 @@ import java.util.UUID;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
-    private final MyUserDetailsService userDetailsService;
     private final JwtUtil jwtTokenUtil;
     private final UserService userService;
 
@@ -44,7 +40,7 @@ public class AuthenticationController {
             throw new BadCredentialsException();
         }
 
-        final var userDetails = userDetailsService
+        final var userDetails = userService
                 .loadUserByUsername(authenticateRequest.getUsername());
         final String accessToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 15);
         final String refreshToken = jwtTokenUtil.generateToken(userDetails, 1000 * 60 * 60 * 24 * 7);
@@ -79,7 +75,7 @@ public class AuthenticationController {
         var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
 
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
-            var accessToken = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(username), 1000 * 60 * 15);
+            var accessToken = jwtTokenUtil.generateToken(userService.loadUserByUsername(username), 1000 * 60 * 15);
             UserPublicDTO user = userService.getUserByUsername(username);
             return ResponseEntity.ok(
                     AuthenticationDto.builder()

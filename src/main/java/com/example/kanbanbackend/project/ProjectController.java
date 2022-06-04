@@ -30,9 +30,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO, HttpServletRequest request) throws Exception {
-        var userId = jwtUtil.getIdFromRequest(request);
-        projectInputDTO.setUserId(userId);
+    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
         return projectService.createProject(projectInputDTO);
     }
 

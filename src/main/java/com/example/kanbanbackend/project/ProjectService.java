@@ -8,6 +8,7 @@ import com.example.kanbanbackend.project.models.Project;
 import com.example.kanbanbackend.project.models.ProjectIdDto;
 import com.example.kanbanbackend.project.models.ProjectInputDTO;
 import com.example.kanbanbackend.project.models.ProjectSetDto;
+import com.example.kanbanbackend.security.AuthenticationFacade;
 import com.example.kanbanbackend.user.models.UserListDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,10 +24,12 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberServiceImpl projectMemberService;
+    private final AuthenticationFacade authenticationFacade;
     private final ModelMapper mapper;
 
     public UUID createProject(ProjectInputDTO projectInputDTO){
         var projectId = UUID.randomUUID();
+        var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
 
         var project = Project.builder()
                 .id(projectId)
@@ -36,7 +39,7 @@ public class ProjectService {
 
         projectRepository.save(project);
 
-        projectMemberService.addProjectMemberOwner(projectId, projectInputDTO.getUserId());
+        projectMemberService.addProjectMemberOwner(projectId, userId);
         return project.getId();
     }
 

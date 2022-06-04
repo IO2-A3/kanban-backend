@@ -12,6 +12,4 @@ import java.util.UUID;
 public class ProjectInputDTO {
     @NotBlank
     private String name;
-    @NotNull
-    private UUID userId;
 }

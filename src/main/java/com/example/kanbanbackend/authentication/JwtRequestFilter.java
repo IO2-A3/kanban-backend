@@ -33,6 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
+
         String id = null;
         String jwt = null;
 
@@ -46,16 +47,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            System.out.println("siema");
             var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
-
-            var userProjectsIdsWhoseIsOwner = user.getProjectMembers().stream()
-                    .filter(projectMember -> projectMember.getRole() == ProjectRole.OWNER)
-                    .map(projectMember -> new SimpleGrantedAuthority(projectMember.getId().getProject().getId().toString()))
-                    .collect(Collectors.toList());
-
-            System.out.println(userProjectsIdsWhoseIsOwner);
-
-            var userDetails = new User(user.getUsername(), user.getPassword(), userProjectsIdsWhoseIsOwner);
+            var userDetails = new User(user.getUsername(), user.getPassword(), new ArrayList<>());
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
