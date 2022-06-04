@@ -3,6 +3,7 @@ package com.example.kanbanbackend.security;
 import com.example.kanbanbackend.exceptions.ForbiddenException;
 import com.example.kanbanbackend.user.UserService;
 import com.example.kanbanbackend.user.models.UserPublicDTO;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
 
     @Override
     public UserPublicDTO getCurrentAuthenticatedUser() {
+
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if ((authentication instanceof AnonymousAuthenticationToken)) {
@@ -26,6 +28,7 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
         }
 
         return userService.getUserByUsername(authentication.getName());
+
     }
 
     @Override

@@ -41,6 +41,10 @@ public class ProjectMemberServiceImpl implements ProjectMemberService{
         else throw new InvitationException("Invitation is still pending");
     }
 
+    public ProjectMember findProjectMemberById(ProjectMemberKey key){
+        return projectMemberRepository.findById(key).get();
+    }
+
     @Override
     public void addProjectMemberOwner(UUID projectId, UUID userId) {
         projectMemberRepository.save(
@@ -59,7 +63,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService{
         projectMemberRepository.save(projectMember);
     }
 
-    private ProjectMemberKey getProjectMemberKey(UUID projectId, UUID userId) {
+    public ProjectMemberKey getProjectMemberKey(UUID projectId, UUID userId) {
         var project = projectRepository.findById(projectId).orElseThrow(() -> new IncorrectIdInputException("Wrong project Id"));
         var user = userRepository.findById(userId).orElseThrow(() -> new IncorrectIdInputException("Wrong user Id"));
 

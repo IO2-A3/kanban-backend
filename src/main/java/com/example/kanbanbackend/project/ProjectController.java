@@ -1,10 +1,14 @@
 package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.authentication.JwtUtil;
-import com.example.kanbanbackend.project.models.ProjectIdDto;
-import com.example.kanbanbackend.project.models.ProjectInputDTO;
-import com.example.kanbanbackend.project.models.ProjectSetDto;
+import com.example.kanbanbackend.list.ListService;
+import com.example.kanbanbackend.list.models.ListInputDto;
+import com.example.kanbanbackend.project.models.*;
+import com.example.kanbanbackend.security.OwnerPermission;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +21,18 @@ import java.util.UUID;
 @RequestMapping("/api/project")
 public class ProjectController {
     private final ProjectService projectService;
+    private final ListService listService;
     private final JwtUtil jwtUtil;
 
     @GetMapping
-    public Set<ProjectSetDto> getProjects(){
-        return projectService.findProjects();
+    @PreAuthorize("isAuthenticated()")
+    public Set<ProjectSetDto> getProjects(HttpServletRequest request) throws Exception {
+        var userId = jwtUtil.getIdFromRequest(request);
+        return projectService.findProjectsByUser(userId);
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
     public ProjectIdDto getProject(@PathVariable UUID id){
         return projectService.findProject(id);
     }
@@ -34,8 +42,12 @@ public class ProjectController {
         return projectService.createProject(projectInputDTO);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteProject(@PathVariable UUID id){
-        projectService.removeProject(id);
+    @PostMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    @OwnerPermission(value = "#inputDto.projectId")
+    public UUID addList(@Valid @RequestBody ListInputDto inputDto, HttpServletRequest request) throws Exception {
+        var userId = jwtUtil.getIdFromRequest(request);
+        return listService.createList(inputDto);
     }
+
 }

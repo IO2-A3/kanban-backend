@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,17 +36,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String id = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        if (authorizationHeader != null) {
             try {
+                jwt = jwtUtil.extractBearerFromHeader(authorizationHeader);
                 id = jwtUtil.extractId(jwt);
             } catch (Exception e) {
+                // @TODO: change exception to 403
                 throw new ExpiredTokenException("Token is probably expired!");
             }
         }
 
+
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            System.out.println("siema");
             var user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new IncorrectIdInputException("Wrong id"));
             var userDetails = new User(user.getUsername(), user.getPassword(), new ArrayList<>());
 

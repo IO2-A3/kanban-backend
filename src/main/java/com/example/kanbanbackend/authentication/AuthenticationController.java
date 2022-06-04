@@ -11,19 +11,24 @@ import com.example.kanbanbackend.exceptions.authentication.BadCredentialsExcepti
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtTokenUtil;
@@ -33,7 +38,7 @@ public class AuthenticationController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<AuthenticationDto> login(@RequestBody @Valid AuthenticateRequest authenticateRequest, HttpServletResponse response) throws Exception {
         try {
-            authenticationManager.authenticate(
+            Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticateRequest.getUsername(), authenticateRequest.getPassword())
             );
         } catch (AuthenticationException e) {
@@ -52,7 +57,8 @@ public class AuthenticationController {
         cookie.setPath("/");
         // @TODO: change to production domain
         cookie.setDomain("localhost");
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
+        cookie.setMaxAge(1000 * 60 * 60 * 24 * 7);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(
@@ -73,7 +79,6 @@ public class AuthenticationController {
     @PostMapping("/refresh_token")
     public ResponseEntity<AuthenticationDto> refreshtoken(@CookieValue("RefreshToken") String refreshToken) {
         var username = userService.getUserName(UUID.fromString(jwtTokenUtil.extractId(refreshToken)));
-
         if (!jwtTokenUtil.isTokenExpired(refreshToken)) {
             var accessToken = jwtTokenUtil.generateToken(userService.loadUserByUsername(username), 1000 * 60 * 15);
             UserPublicDTO user = userService.getUserByUsername(username);
@@ -86,5 +91,18 @@ public class AuthenticationController {
         } else {
             throw new ExpiredTokenException("Token has expired!");
         }
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie("RefreshToken", null);
+        cookie.setPath("/");
+        cookie.setDomain("localhost");
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return ResponseEntity.ok(true);
     }
 }

@@ -12,6 +12,7 @@ import com.example.kanbanbackend.security.AuthenticationFacade;
 import com.example.kanbanbackend.user.models.UserListDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -27,23 +28,25 @@ public class ProjectService {
     private final AuthenticationFacade authenticationFacade;
     private final ModelMapper mapper;
 
-    public UUID createProject(ProjectInputDTO projectInputDTO){
+    public Project createProject(ProjectCreateInputDTO createProjectParams){
         var projectId = UUID.randomUUID();
         var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
 
         var project = Project.builder()
                 .id(projectId)
-                .name(projectInputDTO.getName())
+                .name(createProjectParams.getName())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         projectRepository.save(project);
 
+
         projectMemberService.addProjectMemberOwner(projectId, userId);
-        return project.getId();
+        return project;
     }
 
-    public Set<ProjectSetDto> findProjects(){
+    public Set<ProjectSetDto> findProjectsByUser(UUID userId){
+        // @TODO: fetch only those where user is participant
         var projects = projectRepository.findAll();
         return projects.stream()
                 .map(project -> mapper.map(project, ProjectSetDto.class))
