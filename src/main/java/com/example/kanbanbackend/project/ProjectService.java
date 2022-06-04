@@ -4,10 +4,7 @@ import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.list.models.ListSetDto;
 import com.example.kanbanbackend.project.ProjectMember.ProjectMemberServiceImpl;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberRole;
-import com.example.kanbanbackend.project.models.Project;
-import com.example.kanbanbackend.project.models.ProjectIdDto;
-import com.example.kanbanbackend.project.models.ProjectInputDTO;
-import com.example.kanbanbackend.project.models.ProjectSetDto;
+import com.example.kanbanbackend.project.models.*;
 import com.example.kanbanbackend.security.AuthenticationFacade;
 import com.example.kanbanbackend.user.models.UserListDto;
 import lombok.AllArgsConstructor;
@@ -28,13 +25,13 @@ public class ProjectService {
     private final AuthenticationFacade authenticationFacade;
     private final ModelMapper mapper;
 
-    public Project createProject(ProjectCreateInputDTO createProjectParams){
+    public Project createProject(ProjectInputDTO inputDTO){
         var projectId = UUID.randomUUID();
         var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
 
         var project = Project.builder()
                 .id(projectId)
-                .name(createProjectParams.getName())
+                .name(inputDTO.getName())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .build();
 
@@ -45,10 +42,14 @@ public class ProjectService {
         return project;
     }
 
-    public Set<ProjectSetDto> findProjectsByUser(UUID userId){
+    public Set<ProjectSetDto> findProjectsByUser(){
         // @TODO: fetch only those where user is participant
         var projects = projectRepository.findAll();
+
+        var requestingUserId = authenticationFacade.getCurrentAuthenticatedUser().getId();
+
         return projects.stream()
+                .filter(project -> projectMemberService.checkIfExistsById(projectMemberService.getProjectMemberKey(project.getId(), requestingUserId)))
                 .map(project -> mapper.map(project, ProjectSetDto.class))
                 .collect(Collectors.toSet());
     }
@@ -69,8 +70,6 @@ public class ProjectService {
         var result = mapper.map(project, ProjectIdDto.class);
         result.setProjectMemberRoles(projectMemberRoles);
         result.setListSet(listsSetDto);
-
-
 
         return result;
     }

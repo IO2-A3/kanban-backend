@@ -38,6 +38,9 @@ public class ListService {
 
         listRepository.save(list);
 
+        project.getListSet().add(list);
+        projectRepository.save(project);
+
         return list.getId();
     }
 

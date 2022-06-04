@@ -26,9 +26,8 @@ public class ProjectController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public Set<ProjectSetDto> getProjects(HttpServletRequest request) throws Exception {
-        var userId = jwtUtil.getIdFromRequest(request);
-        return projectService.findProjectsByUser(userId);
+    public Set<ProjectSetDto> getProjects() {
+        return projectService.findProjectsByUser();
     }
 
     @GetMapping("{id}")
@@ -38,7 +37,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
+    public Project addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
         return projectService.createProject(projectInputDTO);
     }
 

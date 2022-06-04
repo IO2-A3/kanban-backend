@@ -31,6 +31,6 @@ public class Project {
     cascade = CascadeType.REMOVE)
     private Set<ProjectMember> projectMembers;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
     private Set<List> listSet;
 }

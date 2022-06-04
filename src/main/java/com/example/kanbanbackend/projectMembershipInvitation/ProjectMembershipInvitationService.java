@@ -54,7 +54,7 @@ public class ProjectMembershipInvitationService {
         return repository.findByUserId(userId);
     }
     public void resolveInvitation(ProjectMembershipInvitationAcceptationDTO acceptationDTO, UUID invitationID){
-        var userId = authenticationFacade.getCurrentAuthenticatedUser();
+        var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
         isInvitationDestinationCorrect(invitationID,userId);
 
         var invitation = repository.findById(invitationID).get();

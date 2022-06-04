@@ -28,7 +28,7 @@ public class List {
     @JsonBackReference
     private Project project;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "list")
     private Set<Task> taskSet;
 
     private String name; //todo: unique

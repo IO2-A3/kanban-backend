@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtTokenUtil;

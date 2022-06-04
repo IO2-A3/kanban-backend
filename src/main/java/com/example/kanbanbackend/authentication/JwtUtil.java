@@ -5,9 +5,7 @@ import com.example.kanbanbackend.exceptions.ForbiddenException;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.exceptions.IncorrectInputDataException;
 import com.example.kanbanbackend.user.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -64,8 +62,10 @@ public class JwtUtil {
         }
     }
 
-    public Boolean validateToken(String token) {
-        if (isTokenExpired(token)) {
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final var email = userRepository.findById(UUID.fromString(extractId(token))).orElseThrow(() -> new IncorrectIdInputException("Wrong id!")).getUsername();
+
+        if (isTokenExpired(token) || !email.equals(userDetails.getUsername())) {
             throw new ExpiredTokenException("Token has expired");
         }
         return true;
@@ -82,5 +82,24 @@ public class JwtUtil {
         token = extractBearerFromHeader(header);
 
         return UUID.fromString(extractId(token));
+    }
+
+    public Boolean validateToken(String token, HttpServletRequest httpServletRequest) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return true;
+        }catch (SignatureException ex){
+            System.out.println("Invalid JWT Signature");
+        }catch (MalformedJwtException ex){
+            System.out.println("Invalid JWT token");
+        }catch (ExpiredJwtException ex){
+            System.out.println("Expired JWT token");
+            httpServletRequest.setAttribute("expired",ex.getMessage());
+        }catch (UnsupportedJwtException ex){
+            System.out.println("Unsupported JWT exception");
+        }catch (IllegalArgumentException ex){
+            System.out.println("Jwt claims string is empty");
+        }
+        return false;
     }
 }

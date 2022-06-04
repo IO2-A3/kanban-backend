@@ -42,7 +42,11 @@ public class ProjectMemberServiceImpl implements ProjectMemberService{
     }
 
     public ProjectMember findProjectMemberById(ProjectMemberKey key){
-        return projectMemberRepository.findById(key).get();
+        return projectMemberRepository.findById(key).orElseThrow();
+    }
+
+    public boolean checkIfExistsById(ProjectMemberKey key) {
+        return projectMemberRepository.existsById(key);
     }
 
     @Override
