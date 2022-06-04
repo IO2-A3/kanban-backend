@@ -45,7 +45,9 @@ public class ProjectMembershipInvitationService {
     }
 
     public Set<ProjectMembershipInvitation> findInvitations(){
-        return new HashSet<>(repository.findAll());
+        var requestingUserId = authenticationFacade.getCurrentAuthenticatedUser().getId();
+
+        return new HashSet<>(repository.findByUserId(requestingUserId));
     }
 
 

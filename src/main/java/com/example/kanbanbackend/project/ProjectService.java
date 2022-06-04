@@ -43,7 +43,6 @@ public class ProjectService {
     }
 
     public Set<ProjectSetDto> findProjectsByUser(){
-        // @TODO: fetch only those where user is participant
         var projects = projectRepository.findAll();
 
         var requestingUserId = authenticationFacade.getCurrentAuthenticatedUser().getId();

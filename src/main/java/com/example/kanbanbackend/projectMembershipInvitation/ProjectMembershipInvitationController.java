@@ -15,11 +15,11 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/projectMembershipInvitation")
+@RequestMapping("/api/project-membership-invitation")
 public class ProjectMembershipInvitationController {
     private ProjectMembershipInvitationService service;
 
-    @GetMapping()
+    @GetMapping
     @PreAuthorize("isAuthenticated()")
     public Set<ProjectMembershipInvitation> getInvitations(){
         return service.findInvitations();
