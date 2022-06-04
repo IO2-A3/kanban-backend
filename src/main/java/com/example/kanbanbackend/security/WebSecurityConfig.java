@@ -1,7 +1,7 @@
 package com.example.kanbanbackend.security;
 
-import com.example.kanbanbackend.UI.MyUserDetailsService;
 import com.example.kanbanbackend.authentication.JwtRequestFilter;
+import com.example.kanbanbackend.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     private final JwtRequestFilter requestFilter;
-    private final MyUserDetailsService myUserDetailsService;
+    private final UserService myUserDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -26,16 +26,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .antMatcher("/api/**")
-//                .authorizeRequests() //
-//                .anyRequest().authenticated() //
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and().addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf().disable()
+                .antMatcher("/api/**")
+                .authorizeRequests() //
+                .anyRequest().authenticated() //
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().cors().and().csrf().disable();
+//        http.cors().and().csrf().disable();
     }
 
     @Override

@@ -38,13 +38,8 @@ public class ProjectController {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public Project addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO, HttpServletRequest request) throws Exception {
-        var userId = jwtUtil.getIdFromRequest(request);
-        ProjectCreateInputDTO createProjectParams = new ProjectCreateInputDTO();
-        createProjectParams.setUserId(userId);
-        createProjectParams.setName(projectInputDTO.getName());
-        return projectService.createProject(createProjectParams);
+    public UUID addProject(@Valid @RequestBody ProjectInputDTO projectInputDTO){
+        return projectService.createProject(projectInputDTO);
     }
 
     @PostMapping("/list")

@@ -1,11 +1,11 @@
 package com.example.kanbanbackend.security;
 
+import com.example.kanbanbackend.user.models.UserPublicDTO;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface AuthenticationFacade {
-    UUID getCurrentAuthenticatedUser();
+    UserPublicDTO getCurrentAuthenticatedUser();
     List<String> getCurrentAuthenticatedUserAuthorities();
-    Boolean isCurrentAuthenticatedUserAnAdmin();
+    Boolean checkIfCurrentAuthenticatedUserAnOwnerOfThisProject();
 }

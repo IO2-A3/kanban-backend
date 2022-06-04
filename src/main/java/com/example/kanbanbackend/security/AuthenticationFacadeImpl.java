@@ -2,6 +2,8 @@ package com.example.kanbanbackend.security;
 
 import com.example.kanbanbackend.exceptions.ForbiddenException;
 import com.example.kanbanbackend.user.UserService;
+import com.example.kanbanbackend.user.models.UserPublicDTO;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,14 +19,16 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     private final UserService userService;
 
     @Override
-    public UUID getCurrentAuthenticatedUser() {
+    public UserPublicDTO getCurrentAuthenticatedUser() {
+
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if ((authentication instanceof AnonymousAuthenticationToken)) {
             throw new ForbiddenException();
         }
 
-        return userService.getUserByUsername(authentication.getName()).getId();
+        return userService.getUserByUsername(authentication.getName());
+
     }
 
     @Override
@@ -40,7 +43,7 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     }
 
     @Override
-    public Boolean isCurrentAuthenticatedUserAnAdmin() {
+    public Boolean checkIfCurrentAuthenticatedUserAnOwnerOfThisProject() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if ((authentication instanceof AnonymousAuthenticationToken)) {

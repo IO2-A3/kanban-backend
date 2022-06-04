@@ -1,11 +1,12 @@
 package com.example.kanbanbackend.user;
 
 import com.example.kanbanbackend.user.models.*;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     void addUser(UserServiceCommand command);
 
     List<UserListDto> getUsers();
