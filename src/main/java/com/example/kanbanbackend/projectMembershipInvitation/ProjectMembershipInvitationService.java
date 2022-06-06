@@ -6,6 +6,7 @@ import com.example.kanbanbackend.exceptions.InvitationException;
 import com.example.kanbanbackend.project.ProjectMember.ProjectMemberRepository;
 import com.example.kanbanbackend.project.ProjectMember.ProjectMemberServiceImpl;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectRole;
+import com.example.kanbanbackend.projectMembershipInvitation.models.AddProjectMemberDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationAcceptationDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
@@ -27,7 +28,8 @@ public class ProjectMembershipInvitationService {
 
 
     public UUID createInvitation(ProjectMembershipInvitationInputDTO dto){
-        isUserOwner(dto.getUserId(),dto.getProjectId());
+//        var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
+//        isUserOwner(dto.getUserId(),dto.getProjectId());
         if(isUserAlreadyInvited(dto.getProjectId(),dto.getUserId())){
             throw new InvitationException("This user already received invitation");
         }
@@ -55,12 +57,16 @@ public class ProjectMembershipInvitationService {
     public List<ProjectMembershipInvitation> findInvitationsByUserId(UUID userId){
         return repository.findByUserId(userId);
     }
+
     public void resolveInvitation(ProjectMembershipInvitationAcceptationDTO acceptationDTO, UUID invitationID){
         var userId = authenticationFacade.getCurrentAuthenticatedUser().getId();
-        isInvitationDestinationCorrect(invitationID,userId);
-
         var invitation = repository.findById(invitationID).get();
-        if(!invitation.getPending()){
+
+        if(!invitation.getUserId().equals(userId)){
+            throw new InvitationException("To zaproszenie nie jest do tego usera");
+        }
+
+        if(invitation.getPending()){
             var decision = acceptationDTO.isResolve();
 
             invitation.setPending(false);
@@ -69,7 +75,7 @@ public class ProjectMembershipInvitationService {
             repository.save(invitation);
 
             if(acceptationDTO.isResolve()){
-                projectMemberService.addProjectMember(new ProjectMembershipInvitationInputDTO(invitation.getProjectId(),invitation.getUserId()));
+                projectMemberService.addProjectMember(new AddProjectMemberDTO(userId,invitation.getProjectId()));
             }
 
         }

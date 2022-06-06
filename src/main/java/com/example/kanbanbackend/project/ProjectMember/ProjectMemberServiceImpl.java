@@ -8,6 +8,7 @@ import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberKey;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectRole;
 import com.example.kanbanbackend.project.ProjectRepository;
 import com.example.kanbanbackend.projectMembershipInvitation.ProjectMembershipInvitationRepository;
+import com.example.kanbanbackend.projectMembershipInvitation.models.AddProjectMemberDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
 import com.example.kanbanbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService{
     private final ProjectMembershipInvitationRepository invitationRepository;
 
     @Override
-    public ProjectMemberKey addProjectMember(ProjectMembershipInvitationInputDTO inputDTO) {
+    public ProjectMemberKey addProjectMember(AddProjectMemberDTO inputDTO) {
         var key = getProjectMemberKey(inputDTO.getProjectId(),inputDTO.getUserId());
         var invitation = invitationRepository.findByUserIdAndProjectId(inputDTO.getUserId(),inputDTO.getProjectId()).get();
         if(!invitation.getPending()){

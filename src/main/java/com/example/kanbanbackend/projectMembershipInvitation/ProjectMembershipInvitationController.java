@@ -31,7 +31,7 @@ public class ProjectMembershipInvitationController {
         return service.findInvitationsByUserId(userId);
     }
     @PostMapping()
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public UUID addInvitation(@Valid @RequestBody ProjectMembershipInvitationInputDTO dto){
         return service.createInvitation(dto);
     }
