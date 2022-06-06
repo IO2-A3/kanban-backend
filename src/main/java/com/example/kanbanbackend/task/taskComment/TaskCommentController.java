@@ -7,6 +7,7 @@ import com.example.kanbanbackend.task.taskComment.models.TaskCommentSetDto;
 import com.example.kanbanbackend.task.taskComment.models.TaskCommentWebInput;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,6 @@ public class TaskCommentController {
     public UUID addComment(@RequestBody TaskCommentWebInput input) {
         return service.addComment(TaskCommentCommand.builder()
                 .taskId(input.getTaskId())
-                .userId(input.getUserId())
                 .content(input.getContent()).build());
     }
 

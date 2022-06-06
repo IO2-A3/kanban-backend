@@ -4,6 +4,7 @@ import com.example.kanbanbackend.exceptions.ForbiddenException;
 import com.example.kanbanbackend.project.ProjectMember.ProjectMemberRepository;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectMemberKey;
 import com.example.kanbanbackend.project.ProjectMember.models.ProjectRole;
+import com.example.kanbanbackend.security.AuthenticationFacade;
 import com.example.kanbanbackend.task.TaskRepository;
 import com.example.kanbanbackend.task.models.Task;
 import com.example.kanbanbackend.task.taskComment.models.TaskComment;
@@ -27,6 +28,7 @@ public class TaskCommentServiceImpl implements TaskCommentService{
     private final TaskRepository taskRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final AuthenticationFacade authenticationFacade;
     private final ModelMapper mapper;
 
     @Override
@@ -40,7 +42,7 @@ public class TaskCommentServiceImpl implements TaskCommentService{
 
     @Override
     public UUID addComment(TaskCommentCommand command) {
-        var user = userRepository.findById(command.getUserId()).orElseThrow();
+        var user = userRepository.findById(authenticationFacade.getCurrentAuthenticatedUser().getId()).orElseThrow();
         var task = taskRepository.findById(command.getTaskId()).orElseThrow();
 
         var currentTime = new Timestamp(System.currentTimeMillis());

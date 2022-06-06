@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.task.models;
 
+import com.example.kanbanbackend.task.taskComment.models.TaskCommentSetDto;
 import com.example.kanbanbackend.user.models.UserListDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,5 @@ public class TaskIdDto {
     private String description;
     private Timestamp dueDate;
     private Set<UserListDto> users;
-
+    private Set<TaskCommentSetDto> comments;
 }
