@@ -1,9 +1,6 @@
 package com.example.kanbanbackend.task;
 
-import com.example.kanbanbackend.task.models.TaskIdDto;
-import com.example.kanbanbackend.task.models.TaskInputDto;
-import com.example.kanbanbackend.task.models.TaskMoveDto;
-import com.example.kanbanbackend.task.models.TaskSetDto;
+import com.example.kanbanbackend.task.models.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +45,15 @@ public class TaskController {
         taskService.moveTask(dto);
     }
 
+    @PutMapping("/editDescription")
+    @PreAuthorize("isAuthenticated()")
+    public void editTaskDescription(@RequestBody TaskDescriptionDto dto){
+        taskService.editTaksDescription(dto);
+    }
+
+    @PostMapping("/user")
+    @PreAuthorize("isAuthenticated()")
+    public UserEmailNameDto addUserToTask(@RequestBody AddUserToTaskDto dto){
+        return taskService.addUserToTask(dto);
+    }
 }

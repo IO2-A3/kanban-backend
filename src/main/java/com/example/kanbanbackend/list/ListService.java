@@ -24,7 +24,7 @@ public class ListService {
     private final TaskRepository taskRepository;
     private final ModelMapper mapper;
 
-    public UUID createList(ListInputDto listInputDTO){
+    public List createList(ListInputDto listInputDTO){
         var project = projectRepository.findById(listInputDTO.getProjectId()).orElseThrow(() -> new IncorrectIdInputException("Wrong id!"));
 
         var quantity = project.getListSet().size();
@@ -41,7 +41,7 @@ public class ListService {
         project.getListSet().add(list);
         projectRepository.save(project);
 
-        return list.getId();
+        return list;
     }
 
     public Set<ListSetDto> findLists(){
