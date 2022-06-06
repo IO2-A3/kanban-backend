@@ -2,6 +2,7 @@ package com.example.kanbanbackend.project;
 
 import com.example.kanbanbackend.authentication.JwtUtil;
 import com.example.kanbanbackend.list.ListService;
+import com.example.kanbanbackend.list.models.List;
 import com.example.kanbanbackend.list.models.ListInputDto;
 import com.example.kanbanbackend.project.models.*;
 import com.example.kanbanbackend.security.OwnerPermission;
@@ -44,7 +45,7 @@ public class ProjectController {
     @PostMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @OwnerPermission(value = "#inputDto.projectId")
-    public UUID addList(@Valid @RequestBody ListInputDto inputDto, HttpServletRequest request) throws Exception {
+    public List addList(@Valid @RequestBody ListInputDto inputDto, HttpServletRequest request) throws Exception {
         var userId = jwtUtil.getIdFromRequest(request);
         return listService.createList(inputDto);
     }

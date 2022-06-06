@@ -3,6 +3,7 @@ package com.example.kanbanbackend.task;
 import com.example.kanbanbackend.exceptions.IncorrectIdInputException;
 import com.example.kanbanbackend.list.ListRepository;
 import com.example.kanbanbackend.task.models.*;
+import com.example.kanbanbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ListRepository listRepository;
+    private final UserRepository userRepository;
     private final ModelMapper mapper;
 
     public UUID createTask(TaskInputDto taskInputDTO){
@@ -51,6 +53,25 @@ public class TaskService {
         task.setListOrder(dto.getOrder());
         taskRepository.save(task);
     }
+
+    public void editTaksDescription(TaskDescriptionDto dto){
+        var task = taskRepository.findById(dto.getTaskId()).get();
+        var newDescription = dto.getDescription();
+        task.setDescription(newDescription);
+        taskRepository.save(task);
+    }
+
+    //username i email czlonka dodanego do taksa ma zwracac dodawanie czlonka do taska
+    public UserEmailNameDto addUserToTask(AddUserToTaskDto dto){
+        var task = taskRepository.findById(dto.getTaskId()).get();
+        var user = userRepository.findByEmail(dto.getUserEmail()).get();
+
+        var taskUsers = task.getUsers();
+        taskUsers.add(user);
+        taskRepository.save(task);
+        return new UserEmailNameDto(user.getEmail(),user.getUsername());
+    }
+
 
     public void removeTask(UUID taskId){
         taskRepository.deleteById(taskId);
