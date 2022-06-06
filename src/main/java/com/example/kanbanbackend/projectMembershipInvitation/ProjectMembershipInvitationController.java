@@ -1,5 +1,6 @@
 package com.example.kanbanbackend.projectMembershipInvitation;
 
+import com.example.kanbanbackend.project.models.ProjectSetDto;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitation;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationAcceptationDTO;
 import com.example.kanbanbackend.projectMembershipInvitation.models.ProjectMembershipInvitationInputDTO;
@@ -31,15 +32,15 @@ public class ProjectMembershipInvitationController {
         return service.findInvitationsByUserId(userId);
     }
     @PostMapping()
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public UUID addInvitation(@Valid @RequestBody ProjectMembershipInvitationInputDTO dto){
         return service.createInvitation(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public void resolveInvitation(@Valid @RequestBody ProjectMembershipInvitationAcceptationDTO acceptationDTO, @PathVariable UUID id){
-        service.resolveInvitation(acceptationDTO,id);
+    public ProjectSetDto resolveInvitation(@Valid @RequestBody ProjectMembershipInvitationAcceptationDTO acceptationDTO, @PathVariable UUID id){
+        return service.resolveInvitation(acceptationDTO,id);
     }
 
 
