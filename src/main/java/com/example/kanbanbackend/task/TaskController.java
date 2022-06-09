@@ -29,7 +29,7 @@ public class TaskController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public UUID addTask(@Valid @RequestBody TaskInputDto taskInputDTO){
+    public Task addTask(@Valid @RequestBody TaskInputDto taskInputDTO){
         return taskService.createTask(taskInputDTO);
     }
 

@@ -20,7 +20,7 @@ public class TaskService {
     private final UserRepository userRepository;
     private final ModelMapper mapper;
 
-    public UUID createTask(TaskInputDto taskInputDTO){
+    public Task createTask(TaskInputDto taskInputDTO){
         listRepository.findById(taskInputDTO.getListId()).orElseThrow(() -> new IllegalArgumentException("List with this id don't exist"));
         var quantity = taskRepository.count();
 
@@ -32,7 +32,7 @@ public class TaskService {
                 .dueDate(taskInputDTO.getDueDate())
                 .listOrder((int) ++quantity).build(); //todo: order tak samo jak w listach.dueDate(taskInputDTO.getDueDate()).build();
         taskRepository.save(task);
-        return task.getId();
+        return task;
     }
 
     public Set<TaskSetDto> findTasks() {

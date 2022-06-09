@@ -14,7 +14,6 @@ public class TaskInputDto {
     private String name;
     @NotNull
     private UUID listId;
-    @NotBlank
     private String description;
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
