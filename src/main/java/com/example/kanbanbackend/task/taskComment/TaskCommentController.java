@@ -1,10 +1,7 @@
 package com.example.kanbanbackend.task.taskComment;
 
 import com.example.kanbanbackend.authentication.JwtUtil;
-import com.example.kanbanbackend.task.taskComment.models.TaskCommentCommand;
-import com.example.kanbanbackend.task.taskComment.models.TaskCommentEditInput;
-import com.example.kanbanbackend.task.taskComment.models.TaskCommentSetDto;
-import com.example.kanbanbackend.task.taskComment.models.TaskCommentWebInput;
+import com.example.kanbanbackend.task.taskComment.models.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,20 +19,22 @@ public class TaskCommentController {
     private final JwtUtil jwtUtil;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
     public Set<TaskCommentSetDto> getComments() {
         return service.getComments();
     }
 
     @PostMapping
-    @ResponseStatus(code = HttpStatus.CREATED, reason = "Commend added succesfully")
-    public UUID addComment(@RequestBody TaskCommentWebInput input) {
+    @PreAuthorize("isAuthenticated()")
+    public TaskComment addComment(@RequestBody TaskCommentWebInput input) {
         return service.addComment(TaskCommentCommand.builder()
                 .taskId(input.getTaskId())
                 .content(input.getContent()).build());
     }
 
     @PutMapping
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Comment edited succesfully")
     public void editComment(@RequestBody TaskCommentEditInput input,
                             HttpServletRequest request) throws Exception {
@@ -48,6 +47,7 @@ public class TaskCommentController {
     }
 
     @DeleteMapping("{taskCommentId}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "Comment deleted from task succesfully")
     public void deleteComment(@PathVariable("taskCommentId") UUID id,
                               HttpServletRequest request) throws Exception {

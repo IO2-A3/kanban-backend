@@ -41,24 +41,27 @@ public class TaskCommentServiceImpl implements TaskCommentService{
     }
 
     @Override
-    public UUID addComment(TaskCommentCommand command) {
-        var user = userRepository.findById(authenticationFacade.getCurrentAuthenticatedUser().getId()).orElseThrow();
-        var task = taskRepository.findById(command.getTaskId()).orElseThrow();
+    public TaskComment addComment(TaskCommentCommand command) {
+        try {
+            var user = userRepository.findById(authenticationFacade.getCurrentAuthenticatedUser().getId()).orElseThrow();
+            var task = taskRepository.findById(command.getTaskId()).orElseThrow();
 
-        var currentTime = new Timestamp(System.currentTimeMillis());
-        var id = UUID.randomUUID();
-
-        taskCommentRepository.save(
-                TaskComment.builder()
-                        .id(id)
-                        .content(command.getContent())
-                        .task(task)
-                        .user(user)
-                        .createdAt(currentTime)
-                        .editedAt(currentTime).build()
-        );
-
-        return id;
+            var currentTime = new Timestamp(System.currentTimeMillis());
+            var id = UUID.randomUUID();
+            var newComment = taskCommentRepository.save(
+                    TaskComment.builder()
+                            .id(id)
+                            .content(command.getContent())
+                            .task(task)
+                            .user(user)
+                            .createdAt(currentTime)
+                            .editedAt(currentTime).build()
+            );
+            return newComment;
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
     }
 
     @Override
