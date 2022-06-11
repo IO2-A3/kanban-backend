@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 public class TaskIdDto {
     private UUID listId;
+    private UUID id;
     private String name;
     private String description;
     private Timestamp dueDate;
