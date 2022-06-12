@@ -13,8 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +49,9 @@ public class ProjectService {
         return projects.stream()
                 .filter(project -> projectMemberService.checkIfExistsById(projectMemberService.getProjectMemberKey(project.getId(), requestingUserId)))
                 .map(project -> mapper.map(project, ProjectSetDto.class))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparingLong(p -> p.getName().hashCode()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
     }
 
     public ProjectIdDto findProject(UUID projectId){
@@ -63,8 +64,8 @@ public class ProjectService {
 
         var listsSetDto = project.getListSet().stream()
                 .map(list -> mapper.map(list, ListSetDto.class))
-                .collect(Collectors.toSet());
-
+                .sorted(Comparator.comparingInt(ListSetDto::getListOrder))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
         var result = mapper.map(project, ProjectIdDto.class);
         result.setProjectMemberRoles(projectMemberRoles);

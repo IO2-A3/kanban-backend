@@ -45,8 +45,7 @@ public class ProjectController {
     @PostMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @OwnerPermission(value = "#inputDto.projectId")
-    public List addList(@Valid @RequestBody ListInputDto inputDto, HttpServletRequest request) throws Exception {
-        var userId = jwtUtil.getIdFromRequest(request);
+    public List addList(@Valid @RequestBody ListInputDto inputDto) {
         return listService.createList(inputDto);
     }
 
