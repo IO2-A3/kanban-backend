@@ -20,6 +20,7 @@ public class ProjectMembershipInvitation {
     private UUID id;
     private UUID userId;
     private UUID projectId;
+    private String projectName;
     private Timestamp createdAt;
     private Boolean pending;
     private Boolean isAccepted;
