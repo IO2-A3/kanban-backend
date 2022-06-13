@@ -46,6 +46,7 @@ public class ProjectMembershipInvitationService {
                 .id(UUID.randomUUID())
                 .userId(invitedUserId)
                 .projectId(dto.getProjectId())
+                .projectName(projectRepository.findById(dto.getProjectId()).get().getName())
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .pending(true)
                 .isAccepted(false)
